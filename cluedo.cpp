@@ -12,7 +12,7 @@ struct player
     vector<string> yes;
     vector<string> no;
     vector<string> maybe;
-};
+}p0,p1,p2,p3,p4,p5;
 
 //	prints player to console
 void printPlayer(player *p)
@@ -54,22 +54,24 @@ void printPlayer(player *p)
 }
 
 // initialises players with ID number
-void initPlayers(player *pzero, player *pone, player *ptwo, player *pthree, player *pfour, player *pfive)
+void initPlayers()
 {
-	pzero->id = 0;
-	pone->id = 1;
-	ptwo->id = 2;
-	pthree->id = 3; 
-	pfour->id = 4;
-	pfive->id = 5;
+	p0.id = 0;
+	p1.id = 1;
+	p2.id = 2;
+	p3.id = 3; 
+	p4.id = 4;
+	p5.id = 5;
+}
+
+void compareNoLists()
+{
+
 }
 
 int main()
 {
-    //  create player structures
-    player p0,p1,p2,p3,p4,p5;
-	initPlayers(&p0,&p1,&p2,&p3,&p4,&p5);
-
+	initPlayers();
     printPlayer(&p0);
     printPlayer(&p1);
     printPlayer(&p2);
