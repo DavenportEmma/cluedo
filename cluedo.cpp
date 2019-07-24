@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-//  structure holds the cards each player has, might have, and doesn't have
+// structure holds the cards each player has, might have, and doesn't have
 struct player
 {
 	int id;
@@ -14,7 +14,7 @@ struct player
     vector<string> maybe;
 }p0,p1,p2,p3,p4,p5;
 
-//	prints player to console
+// prints player to console
 void printPlayer(player *p)
 {
     int i;
@@ -64,19 +64,22 @@ void initPlayers()
 	p5.id = 5;
 }
 
-void compareNoLists()
+// pg	guessing player
+// pr	responding player
+// rm	room
+// ch	character
+// wp	weapon
+void playerGuess(player pg, player pr, string rm, string ch, string wp)
 {
+	int response;	// 1 if pr shows pg a card, 0 if pr has none of the cards
+	cin >> response;	// receive response from keyboard
+
 
 }
 
 int main()
 {
 	initPlayers();
-    printPlayer(&p0);
-    printPlayer(&p1);
-    printPlayer(&p2);
-    printPlayer(&p3);
-    printPlayer(&p4);
-    printPlayer(&p5);
+
     return 0;
 }
