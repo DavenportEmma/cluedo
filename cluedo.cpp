@@ -3,6 +3,7 @@
 #include <string.h>
 #include <vector>
 #include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
 // structure holds the cards each player has, might have, and doesn't have
@@ -17,16 +18,11 @@ struct player
 	}suspects,weapons,rooms;	// yes, no, maybe piles for suspects, weapons, rooms
 }p0,p1,p2,p3,p4,p5;	// create players
 
-// initialise player IDs
-void initPlayers()
-{
-	p0.id = 0;
-	p1.id = 1;
-	p2.id = 2;
-	p3.id = 3;
-	p4.id = 4;
-	p5.id = 5;
-}
+// lists of all suspects, weapons, and rooms
+vector<string> suspectList {"Scarlet","Green","Mustard","Plum","Peacock","White"};
+vector<string> weaponList {"Candlestick","Dagger","Pipe","Revolver","Rope","Spanner"};
+vector<string> roomList {"Kitchen","Ballroom","Conservatory","Billiard","Library","Study","Hall","Lounge","Dining"};
+
 
 // print player contents
 void printPlayer(player *p)
@@ -42,12 +38,12 @@ void printPlayer(player *p)
 	cout << endl << "No:\t";
 	for(int i = 0; i < p->suspects.no.size(); i++)
 	{
-		cout << p->suspects.yes[i] << ", ";
+		cout << p->suspects.no[i] << ", ";
 	}
 	cout << endl << "Maybe:\t";
 	for(int i = 0; i < p->suspects.maybe.size(); i++)
 	{
-		cout << p->suspects.yes[i] << ", ";
+		cout << p->suspects.maybe[i] << ", ";
 	}
 	//------------------------------
 	cout << endl << "Weapons";
@@ -59,12 +55,12 @@ void printPlayer(player *p)
 	cout << endl << "No:\t";
 	for(int i = 0; i < p->weapons.no.size(); i++)
 	{
-		cout << p->weapons.yes[i] << ", ";
+		cout << p->weapons.no[i] << ", ";
 	}
 	cout << endl << "Maybe:\t";
 	for(int i = 0; i < p->weapons.maybe.size(); i++)
 	{
-		cout << p->weapons.yes[i] << ", ";
+		cout << p->weapons.maybe[i] << ", ";
 	}
 	//------------------------------
 	cout << endl << "Rooms";
@@ -76,24 +72,96 @@ void printPlayer(player *p)
 	cout << endl << "No:\t";
 	for(int i = 0; i < p->rooms.no.size(); i++)
 	{
-		cout << p->rooms.yes[i] << ", ";
+		cout << p->rooms.no[i] << ", ";
 	}
 	cout << endl << "Maybe:\t";
 	for(int i = 0; i < p->rooms.maybe.size(); i++)
 	{
-		cout << p->rooms.yes[i] << ", ";
+		cout << p->rooms.maybe[i] << ", ";
 	}
 	cout << endl;
 }
 
-//
-void playerGuess(int res, int pg, int pr, string sus, string wp, string rm)
+// return player object when refered to by ID
+player *IdPlayer(int n)
 {
+	switch(n)
+	{
+		case 0:
+			return &p0;
+			break;
+		
+		case 1:
+			return &p1;
+			break;
+		
+		case 2:
+			return &p2;
+			break;
 
+		case 3:
+			return &p3;
+			break;
+
+		case 4:
+			return &p4;
+			break;
+
+		case 5:
+			return &p5;
+			break;
+		
+		default:
+			return &p0;
+			break;
+	}
+}
+
+// initialise player IDs and maybe vectors
+void initPlayers()
+{
+	for(int i = 0; i < 6; i++)
+	{
+		player *p = IdPlayer(i);
+		p->id = i;
+		p->suspects.maybe = suspectList;
+		p->weapons.maybe = weaponList;
+		p->rooms.maybe = roomList;
+	}
+}
+
+// called when a player makes a guess
+/*	g		guessing player
+	r		repsonding player
+	res		response, 1 = pr has card, 0 = pr doesn't have card
+	sus		suspect
+	wp		weapon
+	rm		room
+*/
+void playerGuess(int g, int r, int res, string sus, string wp, string rm)
+{
+	player *pg = IdPlayer(g);	// get player object being referenced to by its ID
+	player *pr = IdPlayer(r);
+
+	if(!res)	// if pr doesn't have any the suspect, weapon, or room card
+	{
+
+	}
+}
+
+// called by player to enter their own hand into the system
+/*	t	type of card; suspect, weapon, room
+	n	which card it is
+*/
+void playerHas(string t, string n)
+{
+	
 }
 
 int main()
 {
 	initPlayers();
+	printPlayer(&p0);
+	printPlayer(&p1);
     return 0;
 }
