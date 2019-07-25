@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <list>
+#include <vector>
 #include <iostream>
 using namespace std;
 
@@ -11,9 +11,9 @@ struct player
 	int id;
 	struct selection
 	{
-    	list<string> yes;
-    	list<string> no;
-    	list<string> maybe;
+    	vector<string> yes;
+    	vector<string> no;
+    	vector<string> maybe;
 	}suspects,weapons,rooms;	// yes, no, maybe piles for suspects, weapons, rooms
 }p0,p1,p2,p3,p4,p5;	// create players
 
@@ -31,63 +31,62 @@ void initPlayers()
 // print player contents
 void printPlayer(player *p)
 {
-	list<string>::const_iterator iterator;
 	cout << "Player " << p->id << endl;
 	//------------------------------
 	cout << "Suspects";
 	cout << endl << "Yes:\t";
-	for(iterator = p->suspects.yes.begin(); iterator != p->suspects.yes.end(); ++iterator)
+	for(int i = 0; i < p->suspects.yes.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->suspects.yes[i] << ", ";
 	}
 	cout << endl << "No:\t";
-	for(iterator = p->suspects.no.begin(); iterator != p->suspects.no.end(); ++iterator)
+	for(int i = 0; i < p->suspects.no.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->suspects.yes[i] << ", ";
 	}
 	cout << endl << "Maybe:\t";
-	for(iterator = p->suspects.maybe.begin(); iterator != p->suspects.maybe.end(); ++iterator)
+	for(int i = 0; i < p->suspects.maybe.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->suspects.yes[i] << ", ";
 	}
 	//------------------------------
 	cout << endl << "Weapons";
 	cout << endl << "Yes:\t";
-	for(iterator = p->weapons.yes.begin(); iterator != p->weapons.yes.end(); ++iterator)
+	for(int i = 0; i < p->weapons.yes.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->weapons.yes[i] << ", ";
 	}
 	cout << endl << "No:\t";
-	for(iterator = p->weapons.no.begin(); iterator != p->weapons.no.end(); ++iterator)
+	for(int i = 0; i < p->weapons.no.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->weapons.yes[i] << ", ";
 	}
 	cout << endl << "Maybe:\t";
-	for(iterator = p->weapons.maybe.begin(); iterator != p->weapons.maybe.end(); ++iterator)
+	for(int i = 0; i < p->weapons.maybe.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->weapons.yes[i] << ", ";
 	}
 	//------------------------------
 	cout << endl << "Rooms";
 	cout << endl << "Yes:\t";
-	for(iterator = p->rooms.yes.begin(); iterator != p->rooms.yes.end(); ++iterator)
+	for(int i = 0; i < p->rooms.yes.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->rooms.yes[i] << ", ";
 	}
 	cout << endl << "No:\t";
-	for(iterator = p->rooms.no.begin(); iterator != p->rooms.no.end(); ++iterator)
+	for(int i = 0; i < p->rooms.no.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->rooms.yes[i] << ", ";
 	}
 	cout << endl << "Maybe:\t";
-	for(iterator = p->rooms.maybe.begin(); iterator != p->rooms.maybe.end(); ++iterator)
+	for(int i = 0; i < p->rooms.maybe.size(); i++)
 	{
-		cout << *iterator << ", ";
+		cout << p->rooms.yes[i] << ", ";
 	}
 	cout << endl;
 }
 
-
+//
 void playerGuess(int res, int pg, int pr, string sus, string wp, string rm)
 {
 
@@ -96,7 +95,5 @@ void playerGuess(int res, int pg, int pr, string sus, string wp, string rm)
 int main()
 {
 	initPlayers();
-
-	printPlayer(&p0);
     return 0;
 }
