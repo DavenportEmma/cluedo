@@ -40,51 +40,51 @@ void printPlayer(player *p)
 	{
 		cout << *iterator << ", ";
 	}
-	/*cout << endl << "No:\t";
-	for(int i = 0; i < p->suspects.no.size(); i++)
+	cout << endl << "No:\t";
+	for(iterator = p->suspects.no.begin(); iterator != p->suspects.no.end(); ++iterator)
 	{
-		cout << p->suspects.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
 	cout << endl << "Maybe:\t";
-	for(int i = 0; i < p->suspects.maybe.size(); i++)
+	for(iterator = p->suspects.maybe.begin(); iterator != p->suspects.maybe.end(); ++iterator)
 	{
-		cout << p->suspects.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
 	//------------------------------
 	cout << endl << "Weapons";
 	cout << endl << "Yes:\t";
-	for(int i = 0; i < p->weapons.yes.size(); i++)
+	for(iterator = p->weapons.yes.begin(); iterator != p->weapons.yes.end(); ++iterator)
 	{
-		cout << p->weapons.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
 	cout << endl << "No:\t";
-	for(int i = 0; i < p->weapons.no.size(); i++)
+	for(iterator = p->weapons.no.begin(); iterator != p->weapons.no.end(); ++iterator)
 	{
-		cout << p->weapons.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
 	cout << endl << "Maybe:\t";
-	for(int i = 0; i < p->weapons.maybe.size(); i++)
+	for(iterator = p->weapons.maybe.begin(); iterator != p->weapons.maybe.end(); ++iterator)
 	{
-		cout << p->weapons.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
 	//------------------------------
 	cout << endl << "Rooms";
 	cout << endl << "Yes:\t";
-	for(int i = 0; i < p->rooms.yes.size(); i++)
+	for(iterator = p->rooms.yes.begin(); iterator != p->rooms.yes.end(); ++iterator)
 	{
-		cout << p->rooms.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
 	cout << endl << "No:\t";
-	for(int i = 0; i < p->rooms.no.size(); i++)
+	for(iterator = p->rooms.no.begin(); iterator != p->rooms.no.end(); ++iterator)
 	{
-		cout << p->rooms.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
 	cout << endl << "Maybe:\t";
-	for(int i = 0; i < p->rooms.maybe.size(); i++)
+	for(iterator = p->rooms.maybe.begin(); iterator != p->rooms.maybe.end(); ++iterator)
 	{
-		cout << p->rooms.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
-	cout << endl;*/
+	cout << endl;
 }
 
 
@@ -96,8 +96,7 @@ void playerGuess(int res, int pg, int pr, string sus, string wp, string rm)
 int main()
 {
 	initPlayers();
-	p0.suspects.yes.push_front("hello");
-	p0.suspects.yes.push_front("world");
+
 	printPlayer(&p0);
     return 0;
 }
