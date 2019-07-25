@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vector>
+#include <list>
 #include <iostream>
 using namespace std;
 
@@ -11,9 +11,9 @@ struct player
 	int id;
 	struct selection
 	{
-    	vector<string> yes;
-    	vector<string> no;
-    	vector<string> maybe;
+    	list<string> yes;
+    	list<string> no;
+    	list<string> maybe;
 	}suspects,weapons,rooms;	// yes, no, maybe piles for suspects, weapons, rooms
 }p0,p1,p2,p3,p4,p5;	// create players
 
@@ -31,15 +31,16 @@ void initPlayers()
 // print player contents
 void printPlayer(player *p)
 {
+	list<string>::const_iterator iterator;
 	cout << "Player " << p->id << endl;
 	//------------------------------
 	cout << "Suspects";
 	cout << endl << "Yes:\t";
-	for(int i = 0; i < p->suspects.yes.size(); i++)
+	for(iterator = p->suspects.yes.begin(); iterator != p->suspects.yes.end(); ++iterator)
 	{
-		cout << p->suspects.yes[i] << ", ";
+		cout << *iterator << ", ";
 	}
-	cout << endl << "No:\t";
+	/*cout << endl << "No:\t";
 	for(int i = 0; i < p->suspects.no.size(); i++)
 	{
 		cout << p->suspects.yes[i] << ", ";
@@ -83,16 +84,20 @@ void printPlayer(player *p)
 	{
 		cout << p->rooms.yes[i] << ", ";
 	}
-	cout << endl;
+	cout << endl;*/
 }
 
-bool playerGuess(int pg, int pr, string sus, string wp, string rm)
+
+void playerGuess(int res, int pg, int pr, string sus, string wp, string rm)
 {
-	
+
 }
 
 int main()
 {
 	initPlayers();
+	p0.suspects.yes.push_front("hello");
+	p0.suspects.yes.push_front("world");
+	printPlayer(&p0);
     return 0;
 }
