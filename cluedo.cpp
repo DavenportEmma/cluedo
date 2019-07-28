@@ -6,6 +6,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+struct guess	// struct to store guesses made at player
+{
+	string suspect;
+	string weapon;
+	string room;
+};
+
 // structure holds the cards each player has, might have, and doesn't have
 struct player
 {
@@ -16,12 +23,6 @@ struct player
     	vector<string> no;	// it is known the player doesn't have these
     	vector<string> maybe;	// default location for all cards, can't say if player has or doesn't have these
 	}suspects,weapons,rooms;	// yes, no, maybe vectors for suspects, weapons, rooms
-	struct guess	// struct to store guesses made at player
-	{
-		string suspect;
-		string weapon;
-		string room;
-	};
 	vector<guess> guesses;
 }p0,p1,p2,p3,p4,p5;	// create players
 
@@ -257,6 +258,31 @@ int checkNoVectors(vector<string> *v, string s)
 	}
 }
 
+void prevGuessCheck(int p, string sus, string wp, string rm)
+{
+	player *pr = IdPlayer(p);	// responding player
+	int s, w, r;	// suspect, weapon, room flags
+
+	// check responding player's no vectors
+	s = checkNoVectors(&pr->suspects.no,sus);	// return 1 if suspect is in no vector
+	w = checkNoVectors(&pr->weapons.no,wp);
+	r = checkNoVectors(&pr->rooms.no,rm);
+
+	// if 2 out of the 3 cards are in no vectors, we know the responding player has the third one
+	if(s == 1 && w == 1 && r == 0)	// if suspect and weapon are in the no vectors
+	{
+		enterCardToYes(p,"room",rm);	// enter room to yes vector
+	}
+	else if(s == 1 && w == 0 && r == 1)	// if suspect and room are in the no vectors
+	{
+		enterCardToYes(p,"weapon",wp);	// enter weapon to yes vector
+	}
+	else if(s == 0 && w == 1 && r == 1)	// if weapon and room are in the no vectors
+	{
+		enterCardToYes(p,"suspect",sus);	// enter suspect to yes vector
+	}	
+}
+
 // log guess for rechecks
 /*	logPlayer	player id
 	sus	suspect
@@ -265,16 +291,28 @@ int checkNoVectors(vector<string> *v, string s)
 */
 void logGuess(int logPlayer, string suspect, string weapon, string room)
 {
-	/*player *pl = IdPlayer(logPlayer);	// get player object
-	pl->guesses.suspect.push_back(suspect);
-	pl->guesses.weapon.push_back(weapon);
-	pl->guesses.room.push_back(room);*/
+	player *pl = IdPlayer(logPlayer);	// get player object
+	guess g0;	// create guess object
+	g0.suspect = suspect;	// put guess cards into guess object
+	g0.weapon = weapon;
+	g0.room = room;
+	pl->guesses.push_back(g0);	// push guess object to guesses vector
 }
 
+// the current guess may have given us info that would have changed the info we learned
+// of a previous guess
+// run through previous guesses to check
 void runPrevGuesses(int p)
 {
-	player *play = IdPlayer(p);
-	//for(int i = 0; i < )
+	player *pl = IdPlayer(p);	// get player object
+	string s, w, r;	// suspect, weapon, room
+	for(int i = 0; i < pl->guesses.size(); i++)	// increment through guesses vector
+	{
+		s = pl->guesses[i].suspect;
+		w = pl->guesses[i].weapon;
+		r = pl->guesses[i].room;
+		prevGuessCheck(p,s,w,r);	// check previous guess
+	}
 }
 
 // called when a player makes a guess
@@ -326,6 +364,10 @@ void playerGuess(int p, int res, string sus, string wp, string rm)
 int main()
 {
 	initPlayers();
-
+	playerGuess(2,1,"mustard","pipe","dining");
+	printPlayer(&p2);
+	playerGuess(2,0,"mustard","revolver","lounge");
+	printPlayer(&p2);
+	playerGuess(2,0,"green","rope","dining");
 	printAll();
 }
