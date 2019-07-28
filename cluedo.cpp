@@ -158,6 +158,7 @@ void enterCards(int k, string t, string n)
 	player *p = IdPlayer(k);
 	if(t == "suspect")
 	{
+		p->suspects.maybe.()
 		p->suspects.yes.push_back(n);
 	}
 	else if(t == "room")
