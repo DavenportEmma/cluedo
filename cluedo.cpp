@@ -20,7 +20,7 @@ struct player
 
 // lists of all suspects, weapons, and rooms
 vector<string> suspectList {"scarlet","green","mustard","plum","peacock","white"};
-vector<string> weaponList {"dandlestick","dagger","pipe","revolver","rope","spanner"};
+vector<string> weaponList {"candlestick","dagger","pipe","revolver","rope","spanner"};
 vector<string> roomList {"kitchen","ballroom","conservatory","billiard","library","study","hall","lounge","dining"};
 
 // print player contents
@@ -129,6 +129,26 @@ void initPlayers()
 	}
 }
 
+// sort vector and remove duplicates
+void removeDuplicates(vector<string> *v)
+{
+	sort(v->begin(),v->end());	// sort vector
+	unique(v->begin(),v->end());	// remove duplicates
+}
+
+// called to put card n in the no vectors of all players except for player k
+/*	k	player id number to be excluded
+	t	type of card; suspect, weapon, room
+	n	card name
+*/
+void updateOtherPlayers(int k, string t, string n)
+{
+	for(int i = 0; i < 6; i++)
+	{
+
+	}
+}
+
 // called when a player makes a guess
 /*	g		guessing player
 	r		repsonding player
@@ -155,33 +175,30 @@ void playerGuess(int g, int r, int res, string sus, string wp, string rm)
 */
 void enterCards(int k, string t, string n)
 {
-	player *p = IdPlayer(k);
-	if(t == "suspect")
+	player *p = IdPlayer(k);	// identify player and get reference
+	if(t == "suspect")	// check what type of card is being entered
 	{
-		p->suspects.maybe.()
-		p->suspects.yes.push_back(n);
+		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe list
+		p->suspects.yes.push_back(n);	// add to the yes list
+		removeDuplicates(&p->suspects.yes);	// sort and remove duplicates from yes list
 	}
 	else if(t == "room")
 	{
+		remove(p->rooms.maybe.begin(),p->rooms.maybe.end(),n);
 		p->rooms.yes.push_back(n);
+		removeDuplicates(&p->rooms.yes);
 	}
 	else if(t == "weapon")
 	{
+		remove(p->weapons.maybe.begin(),p->weapons.maybe.end(),n);
 		p->weapons.yes.push_back(n);
+		removeDuplicates(&p->weapons.yes);
 	}
-}
-
-// sort vector and remove duplicates
-void removeDuplicates(vector<string> *v)
-{
-	sort(v->begin(),v->end());	// sort vector
-	unique(v->begin(),v->end());	// remove duplicates
+	updateOtherPlayers(k,t,n);	// card is removed from all other players' maybe lists
 }
 
 int main()
 {
 	initPlayers();
-	printPlayer(&p0);
-	enterCards(0,"suspect","plum");
-	printPlayer(&p0);
+
 }
