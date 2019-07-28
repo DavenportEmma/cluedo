@@ -9,19 +9,25 @@ using namespace std;
 // structure holds the cards each player has, might have, and doesn't have
 struct player
 {
-	int id;
+	int id;	// identifying number
 	struct selection
 	{
-    	vector<string> yes;
-    	vector<string> no;
-    	vector<string> maybe;
-	}suspects,weapons,rooms;	// yes, no, maybe piles for suspects, weapons, rooms
+    	vector<string> yes;	// it is known the player has these
+    	vector<string> no;	// it is known the player doesn't have these
+    	vector<string> maybe;	// default location for all cards, can't say if player has or doesn't have these
+	}suspects,weapons,rooms;	// yes, no, maybe vectors for suspects, weapons, rooms
+	struct guess	// struct to store guesses made at player
+	{
+		vector<string> suspect;
+		vector<string> weapon;
+		vector<string> room;
+	}guesses;
 }p0,p1,p2,p3,p4,p5;	// create players
 
 // lists of all suspects, weapons, and rooms
-vector<string> suspectList {"scarlet","green","mustard","plum","peacock","white"};
+vector<string> suspectList {"green","mustard","peacock","plum","scarlet","white"};
 vector<string> weaponList {"candlestick","dagger","pipe","revolver","rope","spanner"};
-vector<string> roomList {"kitchen","ballroom","conservatory","billiard","library","study","hall","lounge","dining"};
+vector<string> roomList {"ballroom","billiard","conservatory","dining","hall","kitchen","library","lounge","study"};
 
 // print player contents
 void printPlayer(player *p)
@@ -250,6 +256,20 @@ int checkNoVectors(vector<string> *v, string s)
 	}
 }
 
+// log guess for rechecks
+/*	p	player id
+	sus	suspect
+	wp	weapon
+	rm	room
+*/
+void logGuess(int logPlayer, string suspect, string weapon, string room)
+{
+	player *pl = IdPlayer(logPlayer);	// get player object
+	pl->guesses.suspect.push_back(suspect);
+	pl->guesses.weapon.push_back(weapon);
+	pl->guesses.room.push_back(room);
+}
+
 // called when a player makes a guess
 /*	p		repsonding player
 	res		response, 1 = pr has card, 0 = pr doesn't have card
@@ -289,7 +309,8 @@ void playerGuess(int p, int res, string sus, string wp, string rm)
 		}	
 		else
 		{
-			// do nothing
+			// if no cards can be put in yes or no vectors, log the guess to run again
+			logGuess(p,sus,wp,rm);
 		}	
 	}
 }
@@ -297,14 +318,11 @@ void playerGuess(int p, int res, string sus, string wp, string rm)
 int main()
 {
 	initPlayers();
-	printAll();
 	enterCardToYes(0,"suspect","plum");
 	enterCardToYes(0,"room","billiard");
 	enterCardToYes(0,"weapon","rope");
 	enterCardToYes(1,"suspect","white");
-	printAll();
 	playerGuess(3,0,"mustard","pipe","dining");
-	printAll();
-	playerGuess(4,1,"green","revolver","lounge");
+	playerGuess(4,1,"white","rope","conservatory");
 	printAll();
 }
