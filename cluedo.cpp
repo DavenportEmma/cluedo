@@ -19,10 +19,9 @@ struct player
 }p0,p1,p2,p3,p4,p5;	// create players
 
 // lists of all suspects, weapons, and rooms
-vector<string> suspectList {"Scarlet","Green","Mustard","Plum","Peacock","White"};
-vector<string> weaponList {"Candlestick","Dagger","Pipe","Revolver","Rope","Spanner"};
-vector<string> roomList {"Kitchen","Ballroom","Conservatory","Billiard","Library","Study","Hall","Lounge","Dining"};
-
+vector<string> suspectList {"scarlet","green","mustard","plum","peacock","white"};
+vector<string> weaponList {"dandlestick","dagger","pipe","revolver","rope","spanner"};
+vector<string> roomList {"kitchen","ballroom","conservatory","billiard","library","study","hall","lounge","dining"};
 
 // print player contents
 void printPlayer(player *p)
@@ -150,18 +149,38 @@ void playerGuess(int g, int r, int res, string sus, string wp, string rm)
 }
 
 // called by player to enter their own hand into the system
-/*	t	type of card; suspect, weapon, room
+/*	p	player number
+	t	type of card; suspect, weapon, room
 	n	which card it is
 */
-void playerHas(string t, string n)
+void enterCards(int k, string t, string n)
 {
-	
+	player *p = IdPlayer(k);
+	if(t == "suspect")
+	{
+		p->suspects.yes.push_back(n);
+	}
+	else if(t == "room")
+	{
+		p->rooms.yes.push_back(n);
+	}
+	else if(t == "weapon")
+	{
+		p->weapons.yes.push_back(n);
+	}
+}
+
+// sort vector and remove duplicates
+void removeDuplicates(vector<string> *v)
+{
+	sort(v->begin(),v->end());	// sort vector
+	unique(v->begin(),v->end());	// remove duplicates
 }
 
 int main()
 {
 	initPlayers();
 	printPlayer(&p0);
-	printPlayer(&p1);
-    return 0;
+	enterCards(0,"suspect","plum");
+	printPlayer(&p0);
 }
