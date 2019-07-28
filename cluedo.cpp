@@ -26,7 +26,7 @@ vector<string> roomList {"kitchen","ballroom","conservatory","billiard","library
 // print player contents
 void printPlayer(player *p)
 {
-	cout << "Player " << p->id << endl;
+	cout << "Player " << p->id << " ----------------" << endl;
 	//------------------------------
 	cout << "Suspects";
 	cout << endl << "Yes:\t";
@@ -188,29 +188,35 @@ void updateOtherPlayers(int k, string t, string n)
 	rm		room
 */
 void playerGuess(int g, int r, int res, string sus, string wp, string rm)
-{
-	player *pg = IdPlayer(g);	// get player object being referenced to by its ID
-	player *pr = IdPlayer(r);
+{	// get player object being referenced to by its ID
+	player *pg = IdPlayer(g);	// guessing player
+	player *pr = IdPlayer(r);	// responding player
 
-	if(!res)	// if pr doesn't have any the suspect, weapon, or room card
+	if(res == 0)	// if pr doesn't have any the suspect, weapon, or room card
 	{
-
+		
 	}
+	else	// if pr has at least one of the cards and shows it to pg
+	{
+		
+	}
+	
 }
 
-// called by player to enter their own hand into the system
+// enter card into yes vector of player
+// this affects other players, it is impossible for them to have this card
 /*	p	player number
 	t	type of card; suspect, weapon, room
 	n	which card it is
 */
-void enterCards(int k, string t, string n)
+void enterCardToYes(int k, string t, string n)
 {
 	player *p = IdPlayer(k);	// identify player and get reference
 	if(t == "suspect")	// check what type of card is being entered
 	{
-		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe list
-		p->suspects.yes.push_back(n);	// add to the yes list
-		removeDuplicates(&p->suspects.yes);	// sort and remove duplicates from yes list
+		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
+		p->suspects.yes.push_back(n);	// add to the yes vector
+		removeDuplicates(&p->suspects.yes);	// sort and remove duplicates from yes vector
 	}
 	else if(t == "room")
 	{
@@ -224,11 +230,40 @@ void enterCards(int k, string t, string n)
 		p->weapons.yes.push_back(n);
 		removeDuplicates(&p->weapons.yes);
 	}
-	updateOtherPlayers(k,t,n);	// card is removed from all other players' maybe lists
+	updateOtherPlayers(k,t,n);	// card is removed from all other players' maybe vector
+}
+
+// enter card into no vector of player
+void enterCardToNo(int k, string t, string n)
+{
+	player *p = IdPlayer(k);	// identify player and get reference
+	if(t == "suspect")	// check what type of card is being entered
+	{
+		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
+		p->suspects.no.push_back(n);	// add to the no vector
+		removeDuplicates(&p->suspects.no);	// sort and remove duplicates from no vector
+	}
+	else if(t == "room")
+	{
+		remove(p->rooms.maybe.begin(),p->rooms.maybe.end(),n);
+		p->rooms.no.push_back(n);
+		removeDuplicates(&p->rooms.no);
+	}
+	else if(t == "weapon")
+	{
+		remove(p->weapons.maybe.begin(),p->weapons.maybe.end(),n);
+		p->weapons.no.push_back(n);
+		removeDuplicates(&p->weapons.no);
+	}
 }
 
 int main()
 {
 	initPlayers();
+	printAll();
+	enterCardToYes(0,"suspect","plum");
+	enterCardToYes(0,"room","billiard");
+	enterCardToYes(0,"weapon","rope");
+	enterCardToYes(1,"suspect","white");
 	printAll();
 }
