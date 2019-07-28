@@ -159,9 +159,9 @@ void updateOtherPlayers(int k, string t, string n)
 			player *p = IdPlayer(i);	// identify player and get reference
 			if(t == "suspect")	// check what type of card is being entered
 			{
-				remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe list
-				p->suspects.no.push_back(n);	// add to the no list
-				removeDuplicates(&p->suspects.no);	// sort and remove duplicates from no list
+				remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
+				p->suspects.no.push_back(n);	// add to the no vector
+				removeDuplicates(&p->suspects.no);	// sort and remove duplicates from no vector
 			}
 			else if(t == "room")
 			{
@@ -177,30 +177,6 @@ void updateOtherPlayers(int k, string t, string n)
 			}
 		}
 	}
-}
-
-// called when a player makes a guess
-/*	g		guessing player
-	r		repsonding player
-	res		response, 1 = pr has card, 0 = pr doesn't have card
-	sus		suspect
-	wp		weapon
-	rm		room
-*/
-void playerGuess(int g, int r, int res, string sus, string wp, string rm)
-{	// get player object being referenced to by its ID
-	player *pg = IdPlayer(g);	// guessing player
-	player *pr = IdPlayer(r);	// responding player
-
-	if(res == 0)	// if pr doesn't have any the suspect, weapon, or room card
-	{
-		
-	}
-	else	// if pr has at least one of the cards and shows it to pg
-	{
-		
-	}
-	
 }
 
 // enter card into yes vector of player
@@ -234,6 +210,10 @@ void enterCardToYes(int k, string t, string n)
 }
 
 // enter card into no vector of player
+/*	p	player number
+	t	type of card; suspect, weapon, room
+	n	which card it is
+*/
 void enterCardToNo(int k, string t, string n)
 {
 	player *p = IdPlayer(k);	// identify player and get reference
@@ -257,6 +237,63 @@ void enterCardToNo(int k, string t, string n)
 	}
 }
 
+// return 1 if string s is in vector v
+int checkNoVectors(vector<string> *v, string s)
+{
+	if(find(v->begin(),v->end(),s) != v->end())
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+// called when a player makes a guess
+/*	p		repsonding player
+	res		response, 1 = pr has card, 0 = pr doesn't have card
+	sus		suspect
+	wp		weapon
+	rm		room
+*/
+void playerGuess(int p, int res, string sus, string wp, string rm)
+{	// get player object being referenced to by its ID
+	player *pr = IdPlayer(p);	// responding player
+	int s, w, r;	// suspect, weapon, room flags
+	if(res == 0)	// if responding player doesn't have any the suspect, weapon, or room card
+	{	// enter the suspect, weapon, room to pr's no vectors
+		enterCardToNo(p,"suspect",sus);
+		enterCardToNo(p,"weapon",wp);
+		enterCardToNo(p,"room",rm);
+	}
+	else	// if responding player has at least one of the cards and shows it to the guessing player
+	{
+		// check responding player's no vectors
+		s = checkNoVectors(&pr->suspects.no,sus);	// return 1 if suspect is in no vector
+		w = checkNoVectors(&pr->weapons.no,wp);
+		r = checkNoVectors(&pr->rooms.no,rm);
+
+		// if 2 out of the 3 cards are in no vectors, we know the responding player has the third one
+		if(s == 1 && w == 1 && r == 0)	// if suspect and weapon are in the no vectors
+		{
+			enterCardToYes(p,"room",rm);	// enter room to yes vector
+		}
+		else if(s == 1 && w == 0 && r == 1)	// if suspect and room are in the no vectors
+		{
+			enterCardToYes(p,"weapon",wp);	// enter weapon to yes vector
+		}
+		else if(s == 0 && w == 1 && r == 1)	// if weapon and room are in the no vectors
+		{
+			enterCardToYes(p,"suspect",sus);	// enter suspect to yes vector
+		}	
+		else
+		{
+			// do nothing
+		}	
+	}
+}
+
 int main()
 {
 	initPlayers();
@@ -265,5 +302,9 @@ int main()
 	enterCardToYes(0,"room","billiard");
 	enterCardToYes(0,"weapon","rope");
 	enterCardToYes(1,"suspect","white");
+	printAll();
+	playerGuess(3,0,"mustard","pipe","dining");
+	printAll();
+	playerGuess(4,1,"green","revolver","lounge");
 	printAll();
 }
