@@ -81,6 +81,15 @@ void printPlayer(player *p)
 	cout << endl;
 }
 
+void printAll()
+{
+	printPlayer(&p0);
+	printPlayer(&p1);
+	printPlayer(&p2);
+	printPlayer(&p3);
+	printPlayer(&p4);
+	printPlayer(&p5);
+}
 // return player object when refered to by ID
 player *IdPlayer(int n)
 {
@@ -143,9 +152,30 @@ void removeDuplicates(vector<string> *v)
 */
 void updateOtherPlayers(int k, string t, string n)
 {
-	for(int i = 0; i < 6; i++)
+	for(int i = 0; i < 6; i++)	// iterate through players
 	{
-
+		if(i != k)	// if index is not the player who is to be excluded
+		{
+			player *p = IdPlayer(i);	// identify player and get reference
+			if(t == "suspect")	// check what type of card is being entered
+			{
+				remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe list
+				p->suspects.no.push_back(n);	// add to the no list
+				removeDuplicates(&p->suspects.no);	// sort and remove duplicates from no list
+			}
+			else if(t == "room")
+			{
+				remove(p->rooms.maybe.begin(),p->rooms.maybe.end(),n);
+				p->rooms.no.push_back(n);
+				removeDuplicates(&p->rooms.no);
+			}
+			else if(t == "weapon")
+			{
+				remove(p->weapons.maybe.begin(),p->weapons.maybe.end(),n);
+				p->weapons.no.push_back(n);
+				removeDuplicates(&p->weapons.no);
+			}
+		}
 	}
 }
 
@@ -200,5 +230,5 @@ void enterCards(int k, string t, string n)
 int main()
 {
 	initPlayers();
-
+	printAll();
 }
