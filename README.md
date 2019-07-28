@@ -1,6 +1,8 @@
 # cluedo solving program
 The aim of this project is to develop a program that can solve a game of cluedo.
 
+This project was started after a humiliating loss in a game of Cluedo.
+
 ### C++
 As of 28/07/19 you can't make any mistakes like spelling or capitalisation, or miscategorising when entering cards into the system.
 
