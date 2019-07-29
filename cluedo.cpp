@@ -26,17 +26,18 @@ struct player
 	vector<guess> guesses;
 }p0,p1,p2,p3,p4,p5;	// create players
 
+const int Np = 6;	// number of players
 struct card
 {
 	string name;	// name of card
-	int Nm;	// number of maybe vectors this card is in
-	int Ny;	// number of yes vectors this card is in
+	float Nm = Np;	// number of maybe vectors this card is in, must be float for prob calc to work correctly
+	int Ny = 0;	// number of yes vectors this card is in
+	float prob = 0.142857;	// probability this card is in the middle
+	//	prob calc: (1-Ny)/((Np+1)-(Np-Nm)) -> initialise to 0.14
 };
-
-const int Np = 6;	// number of players
-vector<card> suspectList {{"green",Np},{"mustard",Np},{"peacock",Np},{"plum",Np},{"scarlet",Np},{"white",Np}};
-vector<card> weaponList {{"candlestick",Np},{"dagger",Np},{"pipe",Np},{"revolver",Np},{"rope",Np},{"spanner",Np}};
-vector<card> roomList {{"ballroom",Np},{"billiard",Np},{"conservatory",Np},{"dining",Np},{"hall",Np},{"kitchen",Np},{"library",Np},{"lounge",Np},{"study",Np}};
+vector<card> suspectList {{"green"},{"mustard"},{"peacock"},{"plum"},{"scarlet"},{"white"}};
+vector<card> weaponList {{"candlestick"},{"dagger"},{"pipe"},{"revolver"},{"rope"},{"spanner"}};
+vector<card> roomList {{"ballroom"},{"billiard"},{"conservatory"},{"dining"},{"hall"},{"kitchen"},{"library"},{"lounge"},{"study"}};
 
 // print player contents
 void printPlayer(player *p)
@@ -170,18 +171,33 @@ void removeDuplicates(vector<string> *v)
 	unique(v->begin(),v->end());	// remove duplicates
 }
 
+// probability that this card is in the centre pile
+/*	Np	number of players
+	Ny	number of yes vectors this card is in
+	Nm	number of maybe vectors this card is in
+*/
+float probability(int Ny, int Nm)
+{
+	return (1-Ny)/((Np+1)-(Np-Nm));
+}
+
+void updateProbability()
+{
+
+}
+
 // called to put card n in the no vectors of all players except for player k
-/*	k	player id number to be excluded
+/*	pid	id of player to be excluded
 	t	type of card; suspect, weapon, room
 	n	card name
 */
-void updateOtherPlayers(int k, string t, string n)
+void updateOtherPlayers(int pid, string t, string n)
 {
 	for(int i = 0; i < 6; i++)	// iterate through players
 	{
-		if(i != k)	// if index is not the player who is to be excluded
+		if(i != pid)	// if index is not the player who is to be excluded
 		{
-			player *p = IdPlayer(i);	// identify player and get reference
+			player *p = IdPlayer(pid);
 			if(t == "suspect")	// check what type of card is being entered
 			{
 				remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
@@ -210,9 +226,8 @@ void updateOtherPlayers(int k, string t, string n)
 	t	type of card; suspect, weapon, room
 	n	which card it is
 */
-void enterCardToYes(int k, string t, string n)
+void enterCardToYes(player *p, string t, string n)
 {
-	player *p = IdPlayer(k);	// identify player and get reference
 	if(t == "suspect")	// check what type of card is being entered
 	{
 		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
@@ -231,7 +246,7 @@ void enterCardToYes(int k, string t, string n)
 		p->weapons.yes.push_back(n);
 		removeDuplicates(&p->weapons.yes);
 	}
-	updateOtherPlayers(k,t,n);	// card is removed from all other players' maybe vector
+	updateOtherPlayers(p->id,t,n);	// card is removed from all other players' maybe vector
 }
 
 // enter card into no vector of player
@@ -239,14 +254,14 @@ void enterCardToYes(int k, string t, string n)
 	t	type of card; suspect, weapon, room
 	n	which card it is
 */
-void enterCardToNo(int k, string t, string n)
+void enterCardToNo(player *p, string t, string n)
 {
-	player *p = IdPlayer(k);	// identify player and get reference
 	if(t == "suspect")	// check what type of card is being entered
 	{
 		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
 		p->suspects.no.push_back(n);	// add to the no vector
 		removeDuplicates(&p->suspects.no);	// sort and remove duplicates from no vector
+
 	}
 	else if(t == "room")
 	{
@@ -275,9 +290,8 @@ int checkNoVectors(vector<string> *v, string s)
 	}
 }
 
-void prevGuessCheck(int p, string sus, string wp, string rm)
+void prevGuessCheck(player *pr, string sus, string wp, string rm)
 {
-	player *pr = IdPlayer(p);	// responding player
 	int s, w, r;	// suspect, weapon, room flags
 
 	// check responding player's no vectors
@@ -288,27 +302,26 @@ void prevGuessCheck(int p, string sus, string wp, string rm)
 	// if 2 out of the 3 cards are in no vectors, we know the responding player has the third one
 	if(s == 1 && w == 1 && r == 0)	// if suspect and weapon are in the no vectors
 	{
-		enterCardToYes(p,"room",rm);	// enter room to yes vector
+		enterCardToYes(pr,"room",rm);	// enter room to yes vector
 	}
 	else if(s == 1 && w == 0 && r == 1)	// if suspect and room are in the no vectors
 	{
-		enterCardToYes(p,"weapon",wp);	// enter weapon to yes vector
+		enterCardToYes(pr,"weapon",wp);	// enter weapon to yes vector
 	}
 	else if(s == 0 && w == 1 && r == 1)	// if weapon and room are in the no vectors
 	{
-		enterCardToYes(p,"suspect",sus);	// enter suspect to yes vector
+		enterCardToYes(pr,"suspect",sus);	// enter suspect to yes vector
 	}	
 }
 
 // log guess for rechecks
-/*	logPlayer	player id
+/*	pl	player id
 	sus	suspect
 	wp	weapon
 	rm	room
 */
-void logGuess(int logPlayer, string suspect, string weapon, string room)
+void logGuess(player *pl, string suspect, string weapon, string room)
 {
-	player *pl = IdPlayer(logPlayer);	// get player object
 	guess g0;	// create guess object
 	g0.suspect = suspect;	// put guess cards into guess object
 	g0.weapon = weapon;
@@ -319,35 +332,33 @@ void logGuess(int logPlayer, string suspect, string weapon, string room)
 // the current guess may have given us info that would have changed the info we learned
 // of a previous guess
 // run through previous guesses to check
-void runPrevGuesses(int p)
+void runPrevGuesses(player *pl)
 {
-	player *pl = IdPlayer(p);	// get player object
 	string s, w, r;	// suspect, weapon, room
 	for(int i = 0; i < pl->guesses.size(); i++)	// increment through guesses vector
 	{
 		s = pl->guesses[i].suspect;
 		w = pl->guesses[i].weapon;
 		r = pl->guesses[i].room;
-		prevGuessCheck(p,s,w,r);	// check previous guess
+		prevGuessCheck(pl,s,w,r);	// check previous guess
 	}
 }
 
 // called when a player makes a guess
-/*	p		repsonding player
+/*	pr		repsonding player
 	res		response, 1 = pr has card, 0 = pr doesn't have card
 	sus		suspect
 	wp		weapon
 	rm		room
 */
-void playerGuess(int p, int res, string sus, string wp, string rm)
+void playerGuess(player *pr, int res, string sus, string wp, string rm)
 {	// get player object being referenced to by its ID
-	player *pr = IdPlayer(p);	// responding player
 	int s, w, r;	// suspect, weapon, room flags
 	if(res == 0)	// if responding player doesn't have any the suspect, weapon, or room card
 	{	// enter the suspect, weapon, room to pr's no vectors
-		enterCardToNo(p,"suspect",sus);
-		enterCardToNo(p,"weapon",wp);
-		enterCardToNo(p,"room",rm);
+		enterCardToNo(pr,"suspect",sus);
+		enterCardToNo(pr,"weapon",wp);
+		enterCardToNo(pr,"room",rm);
 	}
 	else	// if responding player has at least one of the cards and shows it to the guessing player
 	{
@@ -359,47 +370,45 @@ void playerGuess(int p, int res, string sus, string wp, string rm)
 		// if 2 out of the 3 cards are in no vectors, we know the responding player has the third one
 		if(s == 1 && w == 1 && r == 0)	// if suspect and weapon are in the no vectors
 		{
-			enterCardToYes(p,"room",rm);	// enter room to yes vector
+			enterCardToYes(pr,"room",rm);	// enter room to yes vector
 		}
 		else if(s == 1 && w == 0 && r == 1)	// if suspect and room are in the no vectors
 		{
-			enterCardToYes(p,"weapon",wp);	// enter weapon to yes vector
+			enterCardToYes(pr,"weapon",wp);	// enter weapon to yes vector
 		}
 		else if(s == 0 && w == 1 && r == 1)	// if weapon and room are in the no vectors
 		{
-			enterCardToYes(p,"suspect",sus);	// enter suspect to yes vector
+			enterCardToYes(pr,"suspect",sus);	// enter suspect to yes vector
 		}	
 		else
 		{
 			// log the guess to check later when more information becomes available
-			logGuess(p,sus,wp,rm);
+			logGuess(pr,sus,wp,rm);
 		}
 	}
-	runPrevGuesses(p);
-}
-
-// probability that this card is in the centre pile
-/*	Np	number of players
-	Ny	number of yes vectors this card is in
-	Nm	number of maybe vectors this card is in
-*/
-float probability(int Ny, int Nm)
-{
-	return (1-Ny)/((Np+1)-(Np-Nm));
+	runPrevGuesses(pr);
 }
 
 // print probability of each card being in the centre pile
 void printProbabilities()
 {	
-	// suspects
 	for(int i = 0; i < suspectList.size(); i++)
 	{
-
+		cout << suspectList[i].name <<"\t" << suspectList[i].prob << endl;
+	}
+	for(int i = 0; i < weaponList.size(); i++)
+	{
+		cout << weaponList[i].name <<"\t" << weaponList[i].prob << endl;
+	}
+	for(int i = 0; i < roomList.size(); i++)
+	{
+		cout << roomList[i].name <<"\t" << roomList[i].prob << endl;
 	}
 }
 
 int main()
 {
 	initPlayers();
+	printProbabilities();
 	printAll();
 }
