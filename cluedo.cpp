@@ -176,15 +176,11 @@ void removeDuplicates(vector<string> *v)
 	Ny	number of yes vectors this card is in
 	Nm	number of maybe vectors this card is in
 */
-float probability(int Ny, int Nm)
+float calcProb(card *c)
 {
-	return (1-Ny)/((Np+1)-(Np-Nm));
+	c->prob = (1 - (c->Ny)) / ((Np + 1) - (Np - c->Nm));
 }
 
-void updateProbability()
-{
-
-}
 
 // called to put card n in the no vectors of all players except for player k
 /*	pid	id of player to be excluded
@@ -220,6 +216,17 @@ void updateOtherPlayers(int pid, string t, string n)
 	}
 }
 
+card *searchFor(string s, vector<card> cardList)
+{
+	for(int i = 0; i < cardList.size(); i++)
+	{
+		if(cardList[i].name == s)
+		{
+			return &cardList[i];
+		}
+	}
+}
+
 // enter card into yes vector of player
 // this affects other players, it is impossible for them to have this card
 /*	p	player number
@@ -228,23 +235,36 @@ void updateOtherPlayers(int pid, string t, string n)
 */
 void enterCardToYes(player *p, string t, string n)
 {
+	card *chosenCard;
 	if(t == "suspect")	// check what type of card is being entered
 	{
 		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
 		p->suspects.yes.push_back(n);	// add to the yes vector
 		removeDuplicates(&p->suspects.yes);	// sort and remove duplicates from yes vector
+		chosenCard = searchFor(n,suspectList);	// get the card being referenced to update its probability of being in the centre pile
+		chosenCard->Ny = 1;	// this card is in a yes vector
+		chosenCard->Nm = 0;	// it will be moved out of all other maybe vectors to the other players' no vectors in update other players func
+		calcProb(chosenCard);
 	}
 	else if(t == "room")
 	{
 		remove(p->rooms.maybe.begin(),p->rooms.maybe.end(),n);
 		p->rooms.yes.push_back(n);
 		removeDuplicates(&p->rooms.yes);
+		chosenCard = searchFor(n,roomList);
+		chosenCard->Ny = 1;
+		chosenCard->Nm = 0;	
+		calcProb(chosenCard);
 	}
 	else if(t == "weapon")
 	{
 		remove(p->weapons.maybe.begin(),p->weapons.maybe.end(),n);
 		p->weapons.yes.push_back(n);
 		removeDuplicates(&p->weapons.yes);
+		chosenCard = searchFor(n,weaponList);
+		chosenCard->Ny = 1;
+		chosenCard->Nm = 0;	
+		calcProb(chosenCard);
 	}
 	updateOtherPlayers(p->id,t,n);	// card is removed from all other players' maybe vector
 }
@@ -256,24 +276,33 @@ void enterCardToYes(player *p, string t, string n)
 */
 void enterCardToNo(player *p, string t, string n)
 {
+	card *chosenCard;
 	if(t == "suspect")	// check what type of card is being entered
 	{
 		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
 		p->suspects.no.push_back(n);	// add to the no vector
 		removeDuplicates(&p->suspects.no);	// sort and remove duplicates from no vector
-
+		chosenCard = searchFor(n,suspectList);	// get card being referenced to
+		chosenCard->Nm = chosenCard->Nm - 1;	// decrement the number of maybe vectors the card is in
+		calcProb(chosenCard);	// calculate probability of the card being in the centre pile
 	}
 	else if(t == "room")
 	{
 		remove(p->rooms.maybe.begin(),p->rooms.maybe.end(),n);
 		p->rooms.no.push_back(n);
 		removeDuplicates(&p->rooms.no);
+		chosenCard = searchFor(n,roomList);	
+		chosenCard->Nm = chosenCard->Nm - 1;	
+		calcProb(chosenCard);
 	}
 	else if(t == "weapon")
 	{
 		remove(p->weapons.maybe.begin(),p->weapons.maybe.end(),n);
 		p->weapons.no.push_back(n);
 		removeDuplicates(&p->weapons.no);
+		chosenCard = searchFor(n,weaponList);	
+		chosenCard->Nm = chosenCard->Nm - 1;	
+		calcProb(chosenCard);
 	}
 }
 
@@ -409,6 +438,7 @@ void printProbabilities()
 int main()
 {
 	initPlayers();
+	
 	printProbabilities();
 	printAll();
 }
