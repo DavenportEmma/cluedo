@@ -26,10 +26,17 @@ struct player
 	vector<guess> guesses;
 }p0,p1,p2,p3,p4,p5;	// create players
 
-// lists of all suspects, weapons, and rooms
-vector<string> suspectList {"green","mustard","peacock","plum","scarlet","white"};
-vector<string> weaponList {"candlestick","dagger","pipe","revolver","rope","spanner"};
-vector<string> roomList {"ballroom","billiard","conservatory","dining","hall","kitchen","library","lounge","study"};
+struct card
+{
+	string name;	// name of suspect
+	int Nm;	// number of maybe vectors this suspect is in
+};
+
+int Np = 6;	// number of players
+
+vector<card> suspectList {{"green",Np},{"mustard",Np},{"peacock",Np},{"plum",Np},{"scarlet",Np},{"white",Np}};
+vector<card> weaponList {{"candlestick",Np},{"dagger",Np},{"pipe",Np},{"revolver",Np},{"rope",Np},{"spanner",Np}};
+vector<card> roomList {{"ballroom",Np},{"billiard",Np},{"conservatory",Np},{"dining",Np},{"hall",Np},{"kitchen",Np},{"library",Np},{"lounge",Np},{"study",Np}};
 
 // print player contents
 void printPlayer(player *p)
@@ -140,9 +147,19 @@ void initPlayers()
 	{
 		player *p = IdPlayer(i);
 		p->id = i;
-		p->suspects.maybe = suspectList;
-		p->weapons.maybe = weaponList;
-		p->rooms.maybe = roomList;
+
+		for(int j = 0; j < suspectList.size(); j++)
+		{
+			p->suspects.maybe.push_back(suspectList[j].name);
+		}
+		for(int j = 0; j < weaponList.size(); j++)
+		{
+			p->weapons.maybe.push_back(weaponList[j].name);
+		}
+		for(int j = 0; j < roomList.size(); j++)
+		{
+			p->rooms.maybe.push_back(roomList[j].name);
+		}
 	}
 }
 
@@ -373,17 +390,15 @@ float probability(int Np, int Nm)
 // print probability of each card being in the centre pile
 void printProbabilities()
 {	
-	int noPlayers = 6;	// number of players
 	// suspects
 	for(int i = 0; i < suspectList.size(); i++)
 	{
-		
+
 	}
 }
 
 int main()
 {
 	initPlayers();
-
 	printAll();
 }
