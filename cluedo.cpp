@@ -108,6 +108,7 @@ void printAll()
 	printPlayer(&p4);
 	printPlayer(&p5);
 }
+
 // return player object when refered to by ID
 player *IdPlayer(int n)
 {
@@ -146,7 +147,7 @@ player *IdPlayer(int n)
 // initialise player IDs and maybe vectors
 void initPlayers()
 {
-	for(int i = 0; i < 6; i++)
+	for(int i = 0; i < Np; i++)
 	{
 		player *p = IdPlayer(i);
 		p->id = i;
@@ -191,7 +192,7 @@ void calcProb(card *c)
 */
 void updateOtherPlayers(int pid, string t, string n)
 {
-	for(int i = 0; i < 6; i++)	// iterate through players
+	for(int i = 0; i < Np; i++)	// iterate through players
 	{
 		if(i != pid)	// if index is not the player who is to be excluded
 		{
@@ -454,16 +455,17 @@ void printProbabilities()
 
 int main()
 {
+	cout << "Enter number of players: ";
+	int numP;
+	cin >> numP;
+	int *ptr;
+	ptr = (int*)(&Np);
+	//*ptr = numP;
+	cout << Np << endl;
 	initPlayers();
-	playerGuess(&p0,0,"green","dagger","hall");
-	playerGuess(&p1,0,"green","dagger","hall");
-	playerGuess(&p2,0,"green","dagger","hall");
-	playerGuess(&p3,0,"green","dagger","hall");
-	playerGuess(&p4,0,"green","dagger","hall");
-	playerGuess(&p5,0,"green","dagger","hall");
-	printProbabilities();
+	//printProbabilities();
 }
 
-//green"},{"mustard"},{"peacock"},{"plum"},{"scarlet"},{"white"}
-//{{"candlestick"},{"dagger"},{"pipe"},{"revolver"},{"rope"},{"spanner"}};
-//ballroom"},{"billiard"},{"conservatory"},{"dining"},{"hall"},{"kitchen"},{"library"},{"lounge"},{"study"}};
+//green,mustard,peacock,plum,scarlet,white
+//candlestick,dagger,pipe,revolver,rope,spanner
+//ballroom,billiard,conservatory,dining,hall,kitchen,library,lounge,study
