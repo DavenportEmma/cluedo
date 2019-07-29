@@ -28,12 +28,12 @@ struct player
 
 struct card
 {
-	string name;	// name of suspect
-	int Nm;	// number of maybe vectors this suspect is in
+	string name;	// name of card
+	int Nm;	// number of maybe vectors this card is in
+	int Ny;	// number of yes vectors this card is in
 };
 
-int Np = 6;	// number of players
-
+const int Np = 6;	// number of players
 vector<card> suspectList {{"green",Np},{"mustard",Np},{"peacock",Np},{"plum",Np},{"scarlet",Np},{"white",Np}};
 vector<card> weaponList {{"candlestick",Np},{"dagger",Np},{"pipe",Np},{"revolver",Np},{"rope",Np},{"spanner",Np}};
 vector<card> roomList {{"ballroom",Np},{"billiard",Np},{"conservatory",Np},{"dining",Np},{"hall",Np},{"kitchen",Np},{"library",Np},{"lounge",Np},{"study",Np}};
@@ -380,11 +380,12 @@ void playerGuess(int p, int res, string sus, string wp, string rm)
 
 // probability that this card is in the centre pile
 /*	Np	number of players
+	Ny	number of yes vectors this card is in
 	Nm	number of maybe vectors this card is in
 */
-float probability(int Np, int Nm)
+float probability(int Ny, int Nm)
 {
-	return 1/((Np+1)-(Np-Nm));
+	return (1-Ny)/((Np+1)-(Np-Nm));
 }
 
 // print probability of each card being in the centre pile
