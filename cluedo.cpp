@@ -35,9 +35,11 @@ struct card
 	float prob = 0.142857;	// probability this card is in the middle
 	//	prob calc: (1-Ny)/((Np+1)-(Np-Nm)) -> initialise to 0.14
 };
-vector<card> suspectList {{"green"},{"mustard"},{"peacock"},{"plum"},{"scarlet"},{"white"}};
-vector<card> weaponList {{"candlestick"},{"dagger"},{"pipe"},{"revolver"},{"rope"},{"spanner"}};
-vector<card> roomList {{"ballroom"},{"billiard"},{"conservatory"},{"dining"},{"hall"},{"kitchen"},{"library"},{"lounge"},{"study"}};
+
+// blank entry is left at end of lists to allow the final element to be removed without issue
+vector<card> suspectList {{"green"},{"mustard"},{"peacock"},{"plum"},{"scarlet"},{"white"},{""}};
+vector<card> weaponList {{"candlestick"},{"dagger"},{"pipe"},{"revolver"},{"rope"},{"spanner"},{""}};
+vector<card> roomList {{"ballroom"},{"billiard"},{"conservatory"},{"dining"},{"hall"},{"kitchen"},{"library"},{"lounge"},{"study"},{""}};
 
 // print player contents
 void printPlayer(player *p)
@@ -176,7 +178,7 @@ void removeDuplicates(vector<string> *v)
 	Ny	number of yes vectors this card is in
 	Nm	number of maybe vectors this card is in
 */
-float calcProb(card *c)
+void calcProb(card *c)
 {
 	c->prob = (1 - (c->Ny)) / ((Np + 1) - (Np - c->Nm));
 }
@@ -193,7 +195,7 @@ void updateOtherPlayers(int pid, string t, string n)
 	{
 		if(i != pid)	// if index is not the player who is to be excluded
 		{
-			player *p = IdPlayer(pid);
+			player *p = IdPlayer(i);
 			if(t == "suspect")	// check what type of card is being entered
 			{
 				remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
@@ -216,15 +218,43 @@ void updateOtherPlayers(int pid, string t, string n)
 	}
 }
 
-card *searchFor(string s, vector<card> cardList)
+// search for a card in one of the card lists and return it by reference
+/*	s	card being searched
+	l	card list
+*/
+card *searchFor(string s, string l)
 {
-	for(int i = 0; i < cardList.size(); i++)
+	if(l == "suspect")	// find what type of card it is
 	{
-		if(cardList[i].name == s)
+		for(int i = 0; i < suspectList.size(); i++)	// increment through the card list
 		{
-			return &cardList[i];
+			if(suspectList[i].name == s)	// find card with same name
+			{
+				return &suspectList[i];	// return chosen card by reference
+			}
 		}
 	}
+	else if(l == "room")
+	{
+		for(int i = 0; i < roomList.size(); i++)
+		{
+			if(roomList[i].name == s)
+			{
+				return &roomList[i];
+			}
+		}
+	}
+	else if(l == "weapon")
+	{
+		for(int i = 0; i < weaponList.size(); i++)
+		{
+			if(weaponList[i].name == s)
+			{
+				return &weaponList[i];
+			}
+		}
+	}
+
 }
 
 // enter card into yes vector of player
@@ -241,31 +271,23 @@ void enterCardToYes(player *p, string t, string n)
 		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
 		p->suspects.yes.push_back(n);	// add to the yes vector
 		removeDuplicates(&p->suspects.yes);	// sort and remove duplicates from yes vector
-		chosenCard = searchFor(n,suspectList);	// get the card being referenced to update its probability of being in the centre pile
-		chosenCard->Ny = 1;	// this card is in a yes vector
-		chosenCard->Nm = 0;	// it will be moved out of all other maybe vectors to the other players' no vectors in update other players func
-		calcProb(chosenCard);
 	}
 	else if(t == "room")
 	{
 		remove(p->rooms.maybe.begin(),p->rooms.maybe.end(),n);
 		p->rooms.yes.push_back(n);
 		removeDuplicates(&p->rooms.yes);
-		chosenCard = searchFor(n,roomList);
-		chosenCard->Ny = 1;
-		chosenCard->Nm = 0;	
-		calcProb(chosenCard);
 	}
 	else if(t == "weapon")
 	{
 		remove(p->weapons.maybe.begin(),p->weapons.maybe.end(),n);
 		p->weapons.yes.push_back(n);
 		removeDuplicates(&p->weapons.yes);
-		chosenCard = searchFor(n,weaponList);
-		chosenCard->Ny = 1;
-		chosenCard->Nm = 0;	
-		calcProb(chosenCard);
 	}
+	chosenCard = searchFor(n,t);	// get the card being referenced to update its probability of being in the centre pile
+	chosenCard->Ny = 1;	// this card is in a yes vector
+	chosenCard->Nm = 0;	// it will be moved out of all other maybe vectors to the other players' no vectors in update other players func
+	calcProb(chosenCard);
 	updateOtherPlayers(p->id,t,n);	// card is removed from all other players' maybe vector
 }
 
@@ -282,28 +304,23 @@ void enterCardToNo(player *p, string t, string n)
 		remove(p->suspects.maybe.begin(),p->suspects.maybe.end(),n);	// remove this card from the maybe vector
 		p->suspects.no.push_back(n);	// add to the no vector
 		removeDuplicates(&p->suspects.no);	// sort and remove duplicates from no vector
-		chosenCard = searchFor(n,suspectList);	// get card being referenced to
-		chosenCard->Nm = chosenCard->Nm - 1;	// decrement the number of maybe vectors the card is in
-		calcProb(chosenCard);	// calculate probability of the card being in the centre pile
 	}
 	else if(t == "room")
 	{
 		remove(p->rooms.maybe.begin(),p->rooms.maybe.end(),n);
 		p->rooms.no.push_back(n);
 		removeDuplicates(&p->rooms.no);
-		chosenCard = searchFor(n,roomList);	
-		chosenCard->Nm = chosenCard->Nm - 1;	
-		calcProb(chosenCard);
 	}
 	else if(t == "weapon")
 	{
 		remove(p->weapons.maybe.begin(),p->weapons.maybe.end(),n);
 		p->weapons.no.push_back(n);
 		removeDuplicates(&p->weapons.no);
-		chosenCard = searchFor(n,weaponList);	
-		chosenCard->Nm = chosenCard->Nm - 1;	
-		calcProb(chosenCard);
 	}
+
+	chosenCard = searchFor(n,t);
+	chosenCard->Nm = chosenCard->Nm - 1;	
+	calcProb(chosenCard);
 }
 
 // return 1 if string s is in vector v
@@ -421,15 +438,15 @@ void playerGuess(player *pr, int res, string sus, string wp, string rm)
 // print probability of each card being in the centre pile
 void printProbabilities()
 {	
-	for(int i = 0; i < suspectList.size(); i++)
+	for(int i = 0; i < suspectList.size()-1; i++)
 	{
 		cout << suspectList[i].name <<"\t" << suspectList[i].prob << endl;
 	}
-	for(int i = 0; i < weaponList.size(); i++)
+	for(int i = 0; i < weaponList.size()-1; i++)
 	{
 		cout << weaponList[i].name <<"\t" << weaponList[i].prob << endl;
 	}
-	for(int i = 0; i < roomList.size(); i++)
+	for(int i = 0; i < roomList.size()-1; i++)
 	{
 		cout << roomList[i].name <<"\t" << roomList[i].prob << endl;
 	}
@@ -438,7 +455,15 @@ void printProbabilities()
 int main()
 {
 	initPlayers();
-	
+	playerGuess(&p0,0,"green","dagger","hall");
+	playerGuess(&p1,0,"green","dagger","hall");
+	playerGuess(&p2,0,"green","dagger","hall");
+	playerGuess(&p3,0,"green","dagger","hall");
+	playerGuess(&p4,0,"green","dagger","hall");
+	playerGuess(&p5,0,"green","dagger","hall");
 	printProbabilities();
-	printAll();
 }
+
+//green"},{"mustard"},{"peacock"},{"plum"},{"scarlet"},{"white"}
+//{{"candlestick"},{"dagger"},{"pipe"},{"revolver"},{"rope"},{"spanner"}};
+//ballroom"},{"billiard"},{"conservatory"},{"dining"},{"hall"},{"kitchen"},{"library"},{"lounge"},{"study"}};
