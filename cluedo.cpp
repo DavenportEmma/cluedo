@@ -361,8 +361,25 @@ void playerGuess(int p, int res, string sus, string wp, string rm)
 	runPrevGuesses(p);
 }
 
-// 
+// probability that this card is in the centre pile
+/*	Np	number of players
+	Nm	number of maybe vectors this card is in
+*/
+float probability(int Np, int Nm)
+{
+	return 1/((Np+1)-(Np-Nm));
+}
 
+// print probability of each card being in the centre pile
+void printProbabilities()
+{	
+	int noPlayers = 6;	// number of players
+	// suspects
+	for(int i = 0; i < suspectList.size(); i++)
+	{
+		
+	}
+}
 
 int main()
 {
