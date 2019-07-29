@@ -361,13 +361,12 @@ void playerGuess(int p, int res, string sus, string wp, string rm)
 	runPrevGuesses(p);
 }
 
+// 
+
+
 int main()
 {
 	initPlayers();
-	playerGuess(2,1,"mustard","pipe","dining");
-	printPlayer(&p2);
-	playerGuess(2,0,"mustard","revolver","lounge");
-	printPlayer(&p2);
-	playerGuess(2,0,"green","rope","dining");
+
 	printAll();
 }
