@@ -45,12 +45,14 @@ function playerNameUpdate()
 
 function enterCardToYes()
 {
-
+	var player = document.getElementById("yesPlayerSelect");
+	var card = document.getElementById("yesCard");
 }
 
 function enterCardToNo()
 {
-
+	var player = document.getElementById("noPlayerSelect");
+	var card = document.getElementById("noCard");
 }
 
 // prevents scripts from running before elements have loaded
