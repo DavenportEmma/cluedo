@@ -2,5 +2,26 @@ div
 {
 	border-style: solid;
 	border-width: 1px;
-	border-color: black;
+	border-color: blue;
+}
+
+span
+{
+	border-style: solid;
+	border-width: 1px;
+	border-color: red;
+}
+
+table, th
+{
+	border: 1px solid green;
+}
+
+td
+{
+	border: 1px solid green;
+	word-wrap: none;
+	overflow: hidden;
+	width: 110px;
+	max-width: 110px;
 }
