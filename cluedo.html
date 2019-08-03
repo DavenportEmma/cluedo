@@ -6,5 +6,283 @@
     <script src="js/cluedo.js"></script>
 </head>
 <body>
+    <div>   <!-- number of players -->
+        Number of players: 
+        <input type="text" id="playerNumber" maxlength="1" size="1">
+        <input type="button" id="playerNumberSubmit" value="Submit">
+    </div>
 
+    <div>   <!-- player names -->
+        Player 
+        <select id="playerSelect">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+        name:
+        <input type="text" id="playerName">
+        <input type="button" id="playerNameSubmit" value="Submit">
+    </div>
+
+	<div>	<!-- enter cards to yes -->
+		Enter cards to yes: <br>
+		Player: <select id="yesPlayerSelect">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+			</select>
+		Card: <input type="text" id="yesCard">
+		<input type="button" id="yesCardSubmit" value="Submit">
+	</div>
+
+	<div>	<!-- enter cards to no -->
+		Enter cards to no: <br>
+		Player: <select id="noPlayerSelect">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+			</select>
+		Card: <input type="text" id="noCard">
+		<input type="button" id="noCardSubmit" value="Submit">
+	</div>
+
+    <div>   <!-- suspect table -->
+        <table>
+            <th>Players</th>
+            <th colspan="6">Suspects</th>
+            <tr>
+                <td></td>
+                <td>Green</td>
+                <td>Mustard</td>
+                <td>Peacock</td>
+                <td>Plum</td>
+                <td>Scarlet</td>
+                <td>White</td>
+            </tr>
+            <tr>
+                <td class="0">1</td>
+                <td class="green0">?</td>
+                <td class="mustard0">?</td>
+                <td class="peacock0">?</td>
+                <td class="plum0">?</td>
+                <td class="scarlet0">?</td>
+                <td class="white0">?</td>
+            </tr>
+            <tr>
+                <td class="1">2</td>
+                <td class="green1">?</td>
+                <td class="mustard1">?</td>
+                <td class="peacock1">?</td>
+                <td class="plum1">?</td>
+                <td class="scarlet1">?</td>
+                <td class="white1">?</td>
+            </tr>
+            <tr>
+                <td class="2">3</td>
+                <td class="green2">?</td>
+                <td class="mustard2">?</td>
+                <td class="peacock2">?</td>
+                <td class="plum2">?</td>
+                <td class="scarlet2">?</td>
+                <td class="white2">?</td>
+            </tr>
+            <tr>
+                <td class="3">4</td>
+                <td class="green3">?</td>
+                <td class="mustard3">?</td>
+                <td class="peacock3">?</td>
+                <td class="plum3">?</td>
+                <td class="scarlet3">?</td>
+                <td class="white3">?</td>
+            </tr>
+            <tr>
+                <td class="4">5</td>
+                <td class="green4">?</td>
+                <td class="mustard4">?</td>
+                <td class="peacock4">?</td>
+                <td class="plum4">?</td>
+                <td class="scarlet4">?</td>
+                <td class="white4">?</td>
+            </tr>
+            <tr>
+                <td class="5">6</td>
+                <td class="green5">?</td>
+                <td class="mustard5">?</td>
+                <td class="peacock5">?</td>
+                <td class="plum5">?</td>
+                <td class="scarlet5">?</td>
+                <td class="white5">?</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>   <!-- weapon table -->
+        <table>
+            <th>Players</th>
+            <th colspan="6">Weapons</th>
+            <tr>
+                <td></td>
+                <td>Candlestick</td>
+                <td>Dagger</td>
+                <td>Pipe</td>
+                <td>Revolver</td>
+                <td>Rope</td>
+                <td>Spanner</td>
+            </tr>
+            <tr>
+                <td class="0">1</td>
+                <td class="candlestick0">?</td>
+                <td class="dagger0">?</td>
+                <td class="pipe0">?</td>
+                <td class="revolver0">?</td>
+                <td class="rope0">?</td>
+                <td class="spanner0">?</td>
+            </tr>
+            <tr>
+                <td class="1">2</td>
+                <td class="candlestick1">?</td>
+                <td class="dagger1">?</td>
+                <td class="pipe1">?</td>
+                <td class="revolver1">?</td>
+                <td class="rope1">?</td>
+                <td class="spanner1">?</td>
+            </tr>
+            <tr>
+                <td class="2">3</td>
+                <td class="candlestick02">?</td>
+                <td class="dagger2">?</td>
+                <td class="pipe2">?</td>
+                <td class="revolver2">?</td>
+                <td class="rope2">?</td>
+                <td class="spanner2">?</td>
+            </tr>
+            <tr>
+                <td class="3">4</td>
+                <td class="candlestick03">?</td>
+                <td class="dagger3">?</td>
+                <td class="pipe3">?</td>
+                <td class="revolver3">?</td>
+                <td class="rope3">?</td>
+                <td class="spanner3">?</td>
+            </tr>
+            <tr>
+                <td class="4">5</td>
+                <td class="candlestick04">?</td>
+                <td class="dagger4">?</td>
+                <td class="pipe4">?</td>
+                <td class="revolver4">?</td>
+                <td class="rope4">?</td>
+                <td class="spanner4">?</td>
+            </tr>
+            <tr>
+                <td class="5">6</td>
+                <td class="candlestick05">?</td>
+                <td class="dagger5">?</td>
+                <td class="pipe5">?</td>
+                <td class="revolver5">?</td>
+                <td class="rope5">?</td>
+                <td class="spanner5">?</td>
+            </tr>
+        </table>
+	</div>
+	
+	<div>	<!-- room table -->
+        <table>
+			<th>Players</th>
+			<th colspan="9">Rooms</th>
+			<tr>
+				<td></td>
+				<td>Ballroom</td>
+				<td>Billiard</td>
+				<td>Conservatory</td>
+				<td>Dining</td>
+				<td>Hall</td>
+				<td>Kitchen</td>
+				<td>Library</td>
+				<td>Lounge</td>
+				<td>Study</td>
+			</tr>
+			<tr>
+				<td class="0">1</td>
+				<td class="ballroom0">?</td>
+				<td class="billiard0">?</td>
+				<td class="conservatory0">?</td>
+				<td class="dining0">?</td>
+				<td class="hall0">?</td>
+				<td class="kitchen0">?</td>
+				<td class="library0">?</td>
+				<td class="lounge0">?</td>
+				<td class="study0">?</td>
+			</tr>
+			<tr>
+				<td class="1">2</td>
+				<td class="ballroom1">?</td>
+				<td class="billiard1">?</td>
+				<td class="conservatory1">?</td>
+				<td class="dining1">?</td>
+				<td class="hall1">?</td>
+				<td class="kitchen1">?</td>
+				<td class="library1">?</td>
+				<td class="lounge1">?</td>
+				<td class="study1">?</td>
+			</tr>
+			<tr>
+				<td class="2">3</td>
+				<td class="ballroom2">?</td>
+				<td class="billiard2">?</td>
+				<td class="conservatory2">?</td>
+				<td class="dining2">?</td>
+				<td class="hall2">?</td>
+				<td class="kitchen2">?</td>
+				<td class="library2">?</td>
+				<td class="lounge2">?</td>
+				<td class="study2">?</td>
+			</tr>
+			<tr>
+				<td class="3">4</td>
+				<td class="ballroom3">?</td>
+				<td class="billiard3">?</td>
+				<td class="conservatory3">?</td>
+				<td class="dining3">?</td>
+				<td class="hall3">?</td>
+				<td class="kitchen3">?</td>
+				<td class="library3">?</td>
+				<td class="lounge3">?</td>
+				<td class="study3">?</td>
+			</tr>
+			<tr>
+				<td class="4">5</td>
+				<td class="ballroom4">?</td>
+				<td class="billiard4">?</td>
+				<td class="conservatory4">?</td>
+				<td class="dining4">?</td>
+				<td class="hall4">?</td>
+				<td class="kitchen4">?</td>
+				<td class="library4">?</td>
+				<td class="lounge4">?</td>
+				<td class="study4">?</td>
+			</tr>
+			<tr>
+				<td class="5">6</td>
+				<td class="ballroom5">?</td>
+				<td class="billiard5">?</td>
+				<td class="conservatory5">?</td>
+				<td class="dining5">?</td>
+				<td class="hall5">?</td>
+				<td class="kitchen5">?</td>
+				<td class="library5">?</td>
+				<td class="lounge5">?</td>
+				<td class="study5">?</td>
+			</tr>
+		</table>		
+	</div>
 </body>
