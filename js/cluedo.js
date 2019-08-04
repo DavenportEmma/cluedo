@@ -1,58 +1,151 @@
 // list of all cards
-var suspects = ["green","mustard","peacock","plum","scarlet","white"];
-var weapons = ["candlestick","dagger","pipe","revolver","rope","spanner"];
-var rooms = ["ballroom","billiard","conservatory","dining","hall","kitchen","library","lounge","study"];
+var suspectNames = ["green","mustard","peacock","plum","scarlet","white"];
+var weaponNames = ["candlestick","dagger","pipe","revolver","rope","spanner"];
+var roomNames = ["ballroom","billiard","conservatory","dining","hall","kitchen","library","lounge","study"];
 
-var playerNumber;
-
-var playerNamesArray = [];
+var Np = 6;	// number of players default value 6
+var players = [];	// array of player objects with suspect, weapon, and room yes, no, and maybe arrays
+var suspectList = [];
+var weaponList = [];
+var roomList = [];
 
 // initiate array with invalid entries
-function initPlayerNamesArray()
+function initPlayerArray()
 {
-	var i, p;
+	var i;
+	var p = 	// player object 
+	{
+		id:0,	// identification number
+		suspects:
+		{
+			yes:[],	// it is known the player has these suspects
+			no:[],	// it is known the player doesn't have these suspects
+			maybe:suspectNames	// the player might have these suspects
+		},
+		weapons:
+		{
+			yes:[],
+			no:[],
+			maybe:weaponNames
+		},
+		rooms:
+		{
+			yes:[],
+			no:[],
+			maybe:roomNames
+		},
+		guesses:[]	// to hold guesses made at this player
+	};
+
 	for(i = 0; i < 6; i++)
 	{
-		p = {name:"n/a", index:i};
-		playerNamesArray.push(p);
+		var a = Object.create(p);	// copy object p by value
+		a.id = i;
+		players.push(a);
 	}
 }
 
-// update number of players in game
-function playerNumberUpdate()
+function initCardArray()
 {
-	playerNumber = document.getElementById("playerNumber").value;
-	console.log(playerNumber);
+	var probability = 1 / (Np + 1);
+	var card = 
+	{
+		name:"",	// name of card
+		Nm:Np,
+		Ny:0,
+		prob:probability
+	};
+	var i, c;
+	for(i = 0; i < suspectNames.length; i++)	// fill suspectList with card objects
+	{
+		c = Object.create(card);	// copy card object by value
+		c.name = suspectNames[i];	// enter name of card
+		suspectList.push(c);	// push card to suspectList
+	}
+	for(i = 0; i < weaponNames.length; i++)
+	{
+		c = Object.create(card);
+		c.name = weaponNames[i];
+		weaponList.push(c);
+	}
+	for(i = 0; i < roomNames.length; i++)
+	{
+		c = Object.create(card);
+		c.name = roomNames[i];
+		roomList.push(c);
+	}
 }
 
-// enter the names of the players
-function playerNameUpdate()
+// update the number of players
+function playerNumberUpdate()
 {
-	var index = document.getElementById("playerSelect").value;	// get index
-	index--;	// decrement index for 0 indexing
-	var playerName = document.getElementById("playerName").value;	// get player name
+	Np = document.getElementById("playerNumber").value;
+	console.log(Np + " players");
+}
 
-	var player = {name:playerName, index:index};	// generate player object
-	playerNamesArray[index] = player;	// insert into array
+function updateOtherPlayers()
+{
 
-	var x = document.getElementsByClassName(index);	// update all references to player name on page
-	var i;
-	for (i = 0; i < x.length; i++) 
+}
+
+// returns type of card; suspect, weapon, or room
+// t	name of card
+function cardType(n)
+{
+	t = n.toString();	// convert to string to allow includes() to work
+	if(suspectNames.includes(t))	// if the card is a suspect card
 	{
-		x[i].innerHTML = playerName;
-	} 
+		return "suspect";	// return suspect card type
+	}
+	else if(weaponNames.includes(t))
+	{
+		return "weapon";
+	}
+	else if(roomNames.includes(t))
+	{
+		return "room";
+	}
+	else
+	{
+		return "NA";
+	}
 }
 
 function enterCardToYes()
 {
-	var player = document.getElementById("yesPlayerSelect");
-	var card = document.getElementById("yesCard");
+	var yesPlayer = document.getElementById("yesPlayerSelect").value;
+	var yesCard = document.getElementById("yesCard").value;
+	var type = cardType(yesCard);
+
 }
 
-function enterCardToNo()
+function enterCardToNo(noPlayer, noCard)
 {
-	var player = document.getElementById("noPlayerSelect");
-	var card = document.getElementById("noCard");
+	noPlayer--;	// decrement player number for zero indexed array
+	var type = cardType(noCard);	// get type of card, suspect, weapon, or room
+	switch(type)
+	{
+		case "suspect":
+			// remove card from maybe list and add to no list
+			var ind = players[noPlayer].suspects.maybe.indexOf(noCard);	// get index of card in maybe list
+			if(ind == -1)	// card is not present in maybe list
+			{
+				break;
+			}
+			players[noPlayer].suspects.maybe.splice(ind,1);	// remove 1 card at location ind from maybe list
+			players[noPlayer].suspects.no.push(noCard);	// add card to no list
+		case "weapon":
+
+		case "room":
+
+		default:
+			break;
+	}
+}
+
+function enterGuess()
+{
+
 }
 
 // prevents scripts from running before elements have loaded
@@ -60,9 +153,16 @@ function enterCardToNo()
 window.onload = function() 
 {
 	document.getElementById("playerNumberSubmit").addEventListener("click",playerNumberUpdate);
-	document.getElementById("playerNameSubmit").addEventListener("click",playerNameUpdate);
-
 	document.getElementById("yesCardSubmit").addEventListener("click",enterCardToYes);
-	document.getElementById("noCardSubmit").addEventListener("click",enterCardToNo);
-	initPlayerNamesArray();
+	document.getElementById("noCardSubmit").addEventListener("click",
+		function()
+		{
+			enterCardToNo(
+				document.getElementById("noPlayerSelect").value,
+				document.getElementById("noCard").value);
+		});
+	document.getElementById("guessSubmit").addEventListener("click",enterGuess);
+	initPlayerArray();
+	initCardArray();
+
 }
