@@ -13,6 +13,9 @@ var roomList = [];
 function initPlayerArray()
 {
 	var i;
+	var s = suspectNames.slice();	// copy suspectNames array by value
+	var w = weaponNames.slice();
+	var r = roomNames.slice();
 	var p = 	// player object 
 	{
 		id:0,	// identification number
@@ -20,21 +23,75 @@ function initPlayerArray()
 		{
 			yes:[],	// it is known the player has these suspects
 			no:[],	// it is known the player doesn't have these suspects
-			maybe:suspectNames	// the player might have these suspects
+			maybe:s	// the player might have these suspects
 		},
 		weapons:
 		{
 			yes:[],
 			no:[],
-			maybe:weaponNames
+			maybe:w
 		},
 		rooms:
 		{
 			yes:[],
 			no:[],
-			maybe:roomNames
+			maybe:r
 		},
-		guesses:[]	// to hold guesses made at this player
+		guesses:[],	// to hold guesses made at this player
+		printCards:function()
+		{	
+			// print suspects
+			console.log("Player " + this.id + "\nSuspects" + "\nYes: ");
+			var j;
+			for(j = 0; j < this.suspects.yes.length; j++)
+			{
+				console.log(this.suspects.yes[j]);
+			}
+			console.log("\nMaybe: ");
+			for(j = 0; j < this.suspects.maybe.length; j++)
+			{
+				console.log(this.suspects.maybe[j]);
+			}
+			console.log("\nNo: ");
+			for(j = 0; j < this.suspects.no.length; j++)
+			{
+				console.log(this.suspects.no[j]);
+			}
+			// print weapons
+			console.log("Weapons" + "\nYes: ");
+			var j;
+			for(j = 0; j < this.weapons.yes.length; j++)
+			{
+				console.log(this.weapons.yes[j]);
+			}
+			console.log("\nMaybe: ");
+			for(j = 0; j < this.weapons.maybe.length; j++)
+			{
+				console.log(this.weapons.maybe[j]);
+			}
+			console.log("\nNo: ");
+			for(j = 0; j < this.weapons.no.length; j++)
+			{
+				console.log(this.weapons.no[j]);
+			}
+			// print rooms
+			console.log("Rooms" + "\nYes: ");
+			var j;
+			for(j = 0; j < this.rooms.yes.length; j++)
+			{
+				console.log(this.rooms.yes[j]);
+			}
+			console.log("\nMaybe: ");
+			for(j = 0; j < this.rooms.maybe.length; j++)
+			{
+				console.log(this.rooms.maybe[j]);
+			}
+			console.log("\nNo: ");
+			for(j = 0; j < this.rooms.no.length; j++)
+			{
+				console.log(this.rooms.no[j]);
+			}
+		}
 	};
 
 	for(i = 0; i < 6; i++)
@@ -51,8 +108,8 @@ function initCardArray()
 	var card = 
 	{
 		name:"",	// name of card
-		Nm:Np,
-		Ny:0,
+		Nm:Np,	// all players might have this card
+		Ny:0,	// all players start with empty yes arrays
 		prob:probability
 	};
 	var i, c;
@@ -111,12 +168,54 @@ function cardType(n)
 	}
 }
 
-function enterCardToYes()
+function enterCardToYes(yesPlayer, yesCard)
 {
-	var yesPlayer = document.getElementById("yesPlayerSelect").value;
-	var yesCard = document.getElementById("yesCard").value;
-	var type = cardType(yesCard);
+	yesPlayer--;	// decrement player ID number for zero indexed array
+	var type = cardType(yesCard);	// get card type
+	console.log("Enter card to Yes " + yesPlayer + " " + yesCard + " " + type);
+	
+	switch(type)
+	{
+		case "suspect":
+			var ind = players[yesPlayer].suspects.maybe.indexOf(yesCard);	// find index of yesCard in player maybe array 
+			console.log("Card found at index " + ind);
+			if(ind == -1)	// card is not present in maybe list
+			{
+				console.log(yesCard + " is not present in player " + yesPlayer + " maybe array");
+				break;
+			}
+			players[yesPlayer].suspects.maybe.splice(ind,1);	// remove 1 card at location ind from maybe list
+			players[yesPlayer].suspects.yes.push(yesCard);	// add card to yes list
+			break;
 
+		case "weapon":
+			var ind = players[yesPlayer].weapons.maybe.indexOf(yesCard);	// find index of yesCard in player maybe array 
+			console.log("Card found at index " + ind);
+			if(ind == -1)	// card is not present in maybe list
+			{
+				console.log(yesCard + " is not present in player " + yesPlayer + " maybe array");
+				break;
+			}
+			players[yesPlayer].weapons.maybe.splice(ind,1);	// remove 1 card at location ind from maybe list
+			players[yesPlayer].weapons.yes.push(yesCard);	// add card to yes list
+			break;
+
+		case "room":
+			var ind = players[yesPlayer].rooms.maybe.indexOf(yesCard);	// find index of yesCard in player maybe array 
+			console.log("Card found at index " + ind);
+			if(ind == -1)	// card is not present in maybe list
+			{
+				console.log(yesCard + " is not present in player " + yesPlayer + " maybe array");
+				break;
+			}
+			players[yesPlayer].rooms.maybe.splice(ind,1);	// remove 1 card at location ind from maybe list
+			players[yesPlayer].rooms.yes.push(yesCard);	// add card to yes list
+			break;
+
+		default:
+			console.log("Error");
+			break;
+	}
 }
 
 function enterCardToNo(noPlayer, noCard)
@@ -153,7 +252,13 @@ function enterGuess()
 window.onload = function() 
 {
 	document.getElementById("playerNumberSubmit").addEventListener("click",playerNumberUpdate);
-	document.getElementById("yesCardSubmit").addEventListener("click",enterCardToYes);
+	document.getElementById("yesCardSubmit").addEventListener("click",
+		function()
+		{
+			enterCardToYes(
+				document.getElementById("yesPlayerSelect").value,
+				document.getElementById("yesCard").value);
+		});
 	document.getElementById("noCardSubmit").addEventListener("click",
 		function()
 		{
