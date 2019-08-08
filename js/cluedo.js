@@ -114,9 +114,10 @@ function removeElement(a,e)
 	if(ind == -1)	// card is not present in maybe list
 	{
 		console.log("Value is not present in array");
-		return;
+		return 0;
 	}
 	a.splice(ind,1);
+	return 1;
 }
 
 // put card n of type t in no arrays of players except for player p
@@ -129,18 +130,18 @@ function updateOtherPlayers(p, t, n)
 			var noPlayer = players[i];
 			if(t == "suspect")
 			{
-				removeElement(noPlayer.suspects.maybe,n);	// remove from maybe
-				noPlayer.suspects.no.push(n);	// add to no vector
+				if(removeElement(noPlayer.suspects.maybe,n))	// remove from maybe & if card is in maybe array
+					noPlayer.suspects.no.push(n);	// add to no vector
 			}
 			else if(t == "weapon")
 			{
-				removeElement(noPlayer.weapons.maybe,n);	// remove from maybe
-				noPlayer.weapons.no.push(n);	// add to no vector
+				if(removeElement(noPlayer.weapons.maybe,n))	// remove from maybe
+					noPlayer.weapons.no.push(n);	// add to no vector
 			}
 			else if(t == "room")
 			{
-				removeElement(noPlayer.rooms.maybe,n);	// remove from maybe
-				noPlayer.rooms.no.push(n);	// add to no vector
+				if(removeElement(noPlayer.rooms.maybe,n))	// remove from maybe
+					noPlayer.rooms.no.push(n);	// add to no vector
 			}
 		}
 	}
@@ -239,36 +240,40 @@ function enterCardToYes(yesPlayer, yesCard)
 	yesPlayer--;	// decrement player ID number for zero indexed array
 	var type = cardType(yesCard);	// get card type
 	var yesCardIndex;
-	console.log("Enter card to Yes " + yesPlayer + " " + yesCard + " " + type + "-----------------------------------------------------------------------------------------");
-	
 	switch(type)
 	{
 		case "suspect":
-			removeElement(players[yesPlayer].suspects.maybe,yesCard);
-			players[yesPlayer].suspects.yes.push(yesCard);	// add card to yes list
-			// update probability of this card being in the centre pile
-			yesCardIndex = suspectNames.indexOf(yesCard);	// get index of card in suspectName array, same index as in suspectList array
-			suspectList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
-			suspectList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
-			calcProb(suspectList[yesCardIndex]);	// recalculate probability
+			if(removeElement(players[yesPlayer].suspects.maybe,yesCard))	// if card is in maybe array
+			{
+				players[yesPlayer].suspects.yes.push(yesCard);	// add card to yes list
+				// update probability of this card being in the centre pile
+				yesCardIndex = suspectNames.indexOf(yesCard);	// get index of card in suspectName array, same index as in suspectList array
+				suspectList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
+				suspectList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(suspectList[yesCardIndex]);	// recalculate probability
+			}
 			break;
 
 		case "weapon":
-			removeElement(players[yesPlayer].weapons.maybe,yesCard);
-			players[yesPlayer].weapons.yes.push(yesCard);	// add card to yes list
-			yesCardIndex = weaponNames.indexOf(yesCard);	// get index of card in suspectList;
-			weaponList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
-			weaponList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
-			calcProb(weaponList[yesCardIndex]);	// recalculate probability
+			if(removeElement(players[yesPlayer].weapons.maybe,yesCard))
+			{
+				players[yesPlayer].weapons.yes.push(yesCard);	// add card to yes list
+				yesCardIndex = weaponNames.indexOf(yesCard);	// get index of card in weaponList;
+				weaponList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
+				weaponList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(weaponList[yesCardIndex]);	// recalculate probability
+			}
 			break;
 
 		case "room":
-			removeElement(players[yesPlayer].rooms.maybe,yesCard);
-			players[yesPlayer].rooms.yes.push(yesCard);	// add card to yes list
-			yesCardIndex = roomNames.indexOf(yesCard);	// get index of card in suspectList;
-			roomList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
-			roomList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
-			calcProb(roomList[yesCardIndex]);	// recalculate probability
+			if(removeElement(players[yesPlayer].rooms.maybe,yesCard))
+			{
+				players[yesPlayer].rooms.yes.push(yesCard);	// add card to yes list
+				yesCardIndex = roomNames.indexOf(yesCard);	// get index of card in roomList;
+				roomList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
+				roomList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(roomList[yesCardIndex]);	// recalculate probability
+			}
 			break;
 
 		default:
@@ -277,32 +282,45 @@ function enterCardToYes(yesPlayer, yesCard)
 	}
 	updateOtherPlayers(yesPlayer,type,yesCard);	// move yesCard from the other players' maybe arrays to no arrays
 	updateProbTable();
-	printCards(0);
-	printCards(1);
 }
 
 function enterCardToNo(noPlayer, noCard)
 {
 	noPlayer--;	// decrement player number for zero indexed array
 	var type = cardType(noCard);	// get type of card, suspect, weapon, or room
+	var noCardIndex;
 	switch(type)
 	{
 		case "suspect":
-			// remove card from maybe list and add to no list
-			var ind = players[noPlayer].suspects.maybe.indexOf(noCard);	// get index of card in maybe list
-			if(ind == -1)	// card is not present in maybe list
+			if(removeElement(players[noPlayer].suspects.maybe,noCard))	// if card is in maybe array
 			{
-				break;
+				players[yesPlayer].suspects.no.push(yesCard);	// add card to no array
+				noCardIndex = suspectNames.indexOf(noCard);	// get index of card in suspectList
+				suspectList[noCardIndex].Nm--;
+				calcProb(suspectList[noCardIndex]);
 			}
-			players[noPlayer].suspects.maybe.splice(ind,1);	// remove 1 card at location ind from maybe list
-			players[noPlayer].suspects.no.push(noCard);	// add card to no list
 		case "weapon":
+			if(removeElement(players[noPlayer].weapons.maybe,noCard))	// if card is in maybe array
+			{
+				players[yesPlayer].weapons.no.push(yesCard);	// add card to no array
+				noCardIndex = weaponNames.indexOf(noCard);	// get index of card in suspectList
+				weaponList[noCardIndex].Nm--;
+				calcProb(weaponList[noCardIndex]);
+			}
 
 		case "room":
+			if(removeElement(players[noPlayer].rooms.maybe,noCard))	// if card is in maybe array
+			{
+				players[yesPlayer].rooms.no.push(yesCard);	// add card to no array
+				noCardIndex = roomNames.indexOf(noCard);	// get index of card in suspectList
+				roomList[noCardIndex].Nm--;
+				calcProb(roomList[noCardIndex]);
+			}
 
 		default:
 			break;
 	}
+	updateProbTable();
 }
 
 function enterGuess()
