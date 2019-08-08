@@ -12,7 +12,6 @@ var roomList = [];
 // initiate array with invalid entries
 function initPlayerArray()
 {
-	var i;
 	var s = suspectNames.slice();	// copy suspectNames array by value
 	var w = weaponNames.slice();
 	var r = roomNames.slice();
@@ -94,7 +93,7 @@ function initPlayerArray()
 		}
 	};
 
-	for(i = 0; i < 6; i++)
+	for(var i = 0; i < 6; i++)
 	{
 		var a = Object.create(p);	// copy object p by value
 		a.id = i;
@@ -108,9 +107,9 @@ function initCardArray()
 	var card = 
 	{
 		name:"",	// name of card
-		Nm:Np,	// all players might have this card
-		Ny:0,	// all players start with empty yes arrays
-		prob:probability
+		Nm:Np,	// number of times card is in maybe array, all players might have this card
+		Ny:0,	// number of times card is in yes array, all players start with empty yes arrays
+		prob:probability	// probability card is in centre pile
 	};
 	var i, c;
 	for(i = 0; i < suspectNames.length; i++)	// fill suspectList with card objects
@@ -130,6 +129,31 @@ function initCardArray()
 		c = Object.create(card);
 		c.name = roomNames[i];
 		roomList.push(c);
+	}
+}
+
+// update card probabilities in table
+function updateProbTable()
+{
+	var table = document.getElementById("probabilityTable").rows;	// get probability table, collection of all rows
+	// update suspect probabilities
+	var i, d;
+	for(i = 1; i < 7; i++)	// iterate through rows, row header at 0, 6 suspects
+	{   
+		d = table[i].cells;	// d is the collection of cells in row i
+		d[1].innerHTML = suspectList[i-1].prob;	// suspect probabilities in column 1
+	}
+	// update weapon probabilities
+	for(i = 1; i < 7; i++)	// iterate through rows, row header at 0, 6 weapons
+	{   
+		d = table[i].cells;	// d is the collection of cells in row i
+		d[3].innerHTML = weaponList[i-1].prob;	// weapon probabilities in column 3
+	}
+	// update room probabilities
+	for(i = 1; i < 10; i++)	// iterate through rows, row header at 0, 6 weapons
+	{   
+		d = table[i].cells;	// d is the collection of cells in row i
+		d[5].innerHTML = roomList[i-1].prob;	// weapon probabilities in column 3
 	}
 }
 
@@ -168,11 +192,13 @@ function cardType(n)
 	}
 }
 
+// enter card to a player's yes array
+// call when you know this player has this card
 function enterCardToYes(yesPlayer, yesCard)
 {
 	yesPlayer--;	// decrement player ID number for zero indexed array
 	var type = cardType(yesCard);	// get card type
-	console.log("Enter card to Yes " + yesPlayer + " " + yesCard + " " + type);
+	console.log("Enter card to Yes " + yesPlayer + " " + yesCard + " " + type + "-----------------------------------------------------------------------------------------");
 	
 	switch(type)
 	{
@@ -216,6 +242,8 @@ function enterCardToYes(yesPlayer, yesCard)
 			console.log("Error");
 			break;
 	}
+	players[yesPlayer].printCards();
+
 }
 
 function enterCardToNo(noPlayer, noCard)
@@ -269,5 +297,5 @@ window.onload = function()
 	document.getElementById("guessSubmit").addEventListener("click",enterGuess);
 	initPlayerArray();
 	initCardArray();
-
+	updateProbTable();
 }
