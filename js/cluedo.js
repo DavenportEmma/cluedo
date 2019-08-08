@@ -294,7 +294,7 @@ function enterCardToNo(noPlayer, noCard)
 		case "suspect":
 			if(removeElement(players[noPlayer].suspects.maybe,noCard))	// if card is in maybe array
 			{
-				players[yesPlayer].suspects.no.push(yesCard);	// add card to no array
+				players[noPlayer].suspects.no.push(yesCard);	// add card to no array
 				noCardIndex = suspectNames.indexOf(noCard);	// get index of card in suspectList
 				suspectList[noCardIndex].Nm--;
 				calcProb(suspectList[noCardIndex]);
@@ -302,7 +302,7 @@ function enterCardToNo(noPlayer, noCard)
 		case "weapon":
 			if(removeElement(players[noPlayer].weapons.maybe,noCard))	// if card is in maybe array
 			{
-				players[yesPlayer].weapons.no.push(yesCard);	// add card to no array
+				players[noPlayer].weapons.no.push(yesCard);	// add card to no array
 				noCardIndex = weaponNames.indexOf(noCard);	// get index of card in suspectList
 				weaponList[noCardIndex].Nm--;
 				calcProb(weaponList[noCardIndex]);
@@ -311,7 +311,7 @@ function enterCardToNo(noPlayer, noCard)
 		case "room":
 			if(removeElement(players[noPlayer].rooms.maybe,noCard))	// if card is in maybe array
 			{
-				players[yesPlayer].rooms.no.push(yesCard);	// add card to no array
+				players[noPlayer].rooms.no.push(yesCard);	// add card to no array
 				noCardIndex = roomNames.indexOf(noCard);	// get index of card in suspectList
 				roomList[noCardIndex].Nm--;
 				calcProb(roomList[noCardIndex]);
