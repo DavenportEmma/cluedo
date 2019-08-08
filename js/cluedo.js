@@ -12,9 +12,6 @@ var roomList = [];
 // initiate array with invalid entries
 function initPlayerArray()
 {
-	var s = Array.from(suspectNames);	// copy suspectNames array by value
-	var w = Array.from(weaponNames);
-	var r = Array.from(roomNames);
 	var p = 	// player object 
 	{
 		id:0,	// identification number
@@ -22,80 +19,26 @@ function initPlayerArray()
 		{
 			yes:[],	// it is known the player has these suspects
 			no:[],	// it is known the player doesn't have these suspects
-			maybe:s	// the player might have these suspects
+			maybe:suspectNames	// the player might have these suspects
 		},
 		weapons:
 		{
 			yes:[],
 			no:[],
-			maybe:w
+			maybe:weaponNames
 		},
 		rooms:
 		{
 			yes:[],
 			no:[],
-			maybe:r
+			maybe:roomNames
 		},
 		guesses:[],	// to hold guesses made at this player
-		printCards:function()
-		{	
-			// print suspects
-			console.log("Player " + this.id + "\nSuspects" + "\nYes: ");
-			var j;
-			for(j = 0; j < this.suspects.yes.length; j++)
-			{
-				console.log(this.suspects.yes[j]);
-			}
-			console.log("\nMaybe: ");
-			for(j = 0; j < this.suspects.maybe.length; j++)
-			{
-				console.log(this.suspects.maybe[j]);
-			}
-			console.log("\nNo: ");
-			for(j = 0; j < this.suspects.no.length; j++)
-			{
-				console.log(this.suspects.no[j]);
-			}
-			// print weapons
-			console.log("Weapons" + "\nYes: ");
-			var j;
-			for(j = 0; j < this.weapons.yes.length; j++)
-			{
-				console.log(this.weapons.yes[j]);
-			}
-			console.log("\nMaybe: ");
-			for(j = 0; j < this.weapons.maybe.length; j++)
-			{
-				console.log(this.weapons.maybe[j]);
-			}
-			console.log("\nNo: ");
-			for(j = 0; j < this.weapons.no.length; j++)
-			{
-				console.log(this.weapons.no[j]);
-			}
-			// print rooms
-			console.log("Rooms" + "\nYes: ");
-			var j;
-			for(j = 0; j < this.rooms.yes.length; j++)
-			{
-				console.log(this.rooms.yes[j]);
-			}
-			console.log("\nMaybe: ");
-			for(j = 0; j < this.rooms.maybe.length; j++)
-			{
-				console.log(this.rooms.maybe[j]);
-			}
-			console.log("\nNo: ");
-			for(j = 0; j < this.rooms.no.length; j++)
-			{
-				console.log(this.rooms.no[j]);
-			}
-		}
 	};
 
 	for(var i = 0; i < 6; i++)
 	{
-		var a = _.cloneDeep(p);	// copy object p by value
+		var a = JSON.parse(JSON.stringify(p));	// copy object p by value
 		a.id = i;
 		players.push(a);
 	}
@@ -168,7 +111,6 @@ function playerNumberUpdate()
 function removeElement(a,e)
 {
 	var ind = a.indexOf(e);
-	console.log("Value found at index " + ind);
 	if(ind == -1)	// card is not present in maybe list
 	{
 		console.log("Value is not present in array");
@@ -185,22 +127,20 @@ function updateOtherPlayers(p, t, n)
 		if(i != p)	// if index is not equal to the player to be excluded
 		{
 			var noPlayer = players[i];
-			switch(t)	// check type of card
+			if(t == "suspect")
 			{
-				case "suspect":
-					removeElement(noPlayer.suspects.maybe,n);	// remove from maybe
-					noPlayer.suspects.no.push(n);	// add to no vector
-					break;
-				case "weapon":
-					removeElement(noPlayer.weapons.maybe,n);	// remove from maybe
-					noPlayer.weapons.no.push(n);	// add to no vector
-					break;
-				case "room":
-					removeElement(noPlayer.rooms.maybe,n);	// remove from maybe
-					noPlayer.rooms.no.push(n);	// add to no vector
-					break;
-				default:
-					break;
+				removeElement(noPlayer.suspects.maybe,n);	// remove from maybe
+				noPlayer.suspects.no.push(n);	// add to no vector
+			}
+			else if(t == "weapon")
+			{
+				removeElement(noPlayer.weapons.maybe,n);	// remove from maybe
+				noPlayer.weapons.no.push(n);	// add to no vector
+			}
+			else if(t == "room")
+			{
+				removeElement(noPlayer.rooms.maybe,n);	// remove from maybe
+				noPlayer.rooms.no.push(n);	// add to no vector
 			}
 		}
 	}
@@ -235,6 +175,63 @@ function calcProb(c)
 	c.prob = (1 - (c.Ny)) / ((Np + 1) - (Np - c.Nm));
 }
 
+// print suspect, weapon, room, yes, no, maybe arrays for player pid
+function printCards(pid)
+{	
+	p = players[pid];	
+	// print suspects
+	console.log("Player " + p.id + "\nSuspects" + "\nYes: ");
+	var j;
+	for(j = 0; j < p.suspects.yes.length; j++)
+	{
+		console.log(p.suspects.yes[j]);
+	}
+	console.log("\nMaybe: ");
+	for(j = 0; j < p.suspects.maybe.length; j++)
+	{
+		console.log(p.suspects.maybe[j]);
+	}
+	console.log("\nNo: ");
+	for(j = 0; j < p.suspects.no.length; j++)
+	{
+		console.log(p.suspects.no[j]);
+	}
+	// print weapons
+	console.log("Weapons" + "\nYes: ");
+	var j;
+	for(j = 0; j < p.weapons.yes.length; j++)
+	{
+		console.log(p.weapons.yes[j]);
+	}
+	console.log("\nMaybe: ");
+	for(j = 0; j < p.weapons.maybe.length; j++)
+	{
+		console.log(p.weapons.maybe[j]);
+	}
+	console.log("\nNo: ");
+	for(j = 0; j < p.weapons.no.length; j++)
+	{
+		console.log(p.weapons.no[j]);
+	}
+	// print rooms
+	console.log("Rooms" + "\nYes: ");
+	var j;
+	for(j = 0; j < p.rooms.yes.length; j++)
+	{
+		console.log(p.rooms.yes[j]);
+	}
+	console.log("\nMaybe: ");
+	for(j = 0; j < p.rooms.maybe.length; j++)
+	{
+		console.log(p.rooms.maybe[j]);
+	}
+	console.log("\nNo: ");
+	for(j = 0; j < p.rooms.no.length; j++)
+	{
+		console.log(p.rooms.no[j]);
+	}
+}
+
 // enter card to a player's yes array
 // call when you know this player has this card
 function enterCardToYes(yesPlayer, yesCard)
@@ -254,7 +251,6 @@ function enterCardToYes(yesPlayer, yesCard)
 			suspectList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 			suspectList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
 			calcProb(suspectList[yesCardIndex]);	// recalculate probability
-			updateOtherPlayers(yesPlayer);	// move yesCard from the other players' maybe arrays to no arrays
 			break;
 
 		case "weapon":
@@ -264,7 +260,6 @@ function enterCardToYes(yesPlayer, yesCard)
 			weaponList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 			weaponList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
 			calcProb(weaponList[yesCardIndex]);	// recalculate probability
-			updateOtherPlayers(yesPlayer);	// move yesCard from the other players' maybe arrays to no arrays
 			break;
 
 		case "room":
@@ -274,16 +269,16 @@ function enterCardToYes(yesPlayer, yesCard)
 			roomList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 			roomList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
 			calcProb(roomList[yesCardIndex]);	// recalculate probability
-			updateOtherPlayers(yesPlayer);	// move yesCard from the other players' maybe arrays to no arrays
 			break;
 
 		default:
 			console.log("Error");
 			break;
 	}
-	players[yesPlayer].printCards();
-	players[2].printCards();
+	updateOtherPlayers(yesPlayer,type,yesCard);	// move yesCard from the other players' maybe arrays to no arrays
 	updateProbTable();
+	printCards(0);
+	printCards(1);
 }
 
 function enterCardToNo(noPlayer, noCard)
