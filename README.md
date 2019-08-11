@@ -7,8 +7,7 @@ This project was started after a humiliating loss in a game of Cluedo.
 ## Features
 This program was originally written in C++ to figure out how the system should work. The C++ version has no user interaction and requires the game to be hard coded into it before compiling. The program was copied into JavaScript and embedded into the cluedo.html page to allow for user interaction.
 
-Each player has three sets assigned to them; suspects, weapons, and rooms. Within these three sets are three more sets; yes, no, and maybe.
-
+Each player has three sets assigned to them; suspects, weapons, and rooms. Within these three sets are three more sets; yes, no, and maybe. The following list illustrates this structure;
 
 *	suspects
 	*	yes
@@ -23,6 +22,7 @@ Each player has three sets assigned to them; suspects, weapons, and rooms. Withi
 	*	no
 	*	maybe
 
+At the beginning of the game every card is in everyone's maybe sets. As the game progresses cards are sorted into the yes or the no sets.
 
 The **Probability table** keeps track of the probability of each card being in the centre envelope. This probabilty is calculated using the following equation;	
 
@@ -30,7 +30,22 @@ The **Probability table** keeps track of the probability of each card being in t
 
 Where *N<sub>y</sub>* is the number of players who have this card, the maximum value this can have is 1. The probability of this card being in the centre envelope drops to zero when a player has this card. *N<sub>p</sub>* is the number of players. *N<sub>m</sub>* is the number of players who might have this card, this is initiated as *N<sub>p</sub>*. This number drops as it is proven that players have or don't have this card.
 
-The three tables below the **Probability table** are the **Player card tables**. These tables 
+The three tables below the **Probability table** are the **Player card tables**. These tables keep track of the players' yes, no, and maybe sets. A **?** indicates that this card is in the player's maybe set,a ✔ indicates that the player has this card and is in the player's yes set, and a ✘ indicates that it has been proven that the player does not have this card and is in the player's no set.
+
+The last three tables are the **Player guess tables**. These tables keep track of the guesses the players have made. A blank cell means that the player has not asked this yet, a **#** means that the player has asked this. Player responses are saved and with every new responses that is made, the program runs through the previous responses to extract any new information. Below is an example of three responses from player 3. This will show how running through previous responses allows for more information to be extracted.
+
+```
+suspect		weapon		room		response
+----------------------------------------------
+mustard		rope		hall		yes
+mustard		spanner		kitchen		no
+green		rope		ballroom	no
+```
+If taken individually the three responses can tell us some information;
+*	Response 1 tells us that player 3 has mustard, rope, and or hall.
+*	Response 2 tells us that player 3 doesn't have mustard, spanner, and kitchen. These three cards are moved to the no set.
+*	Response 3 tells us that player 3 doesn't have green, rope, ballroom. These three cards are moved to the no set.
+After response 3 we can compare response 1 against player 3's card sets again. Response 1 told us that player 3 has mustard, rope, and or hall but the following responses told us that player 3 doesn't have mustard or rope, therefore it has been proven that player 3 has hall.
 
 ## How to use Cluedo solver
 ### Set up 
