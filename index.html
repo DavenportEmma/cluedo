@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<head>
+    <!--<link rel="stylesheet" href="stylesheet.css">-->
+    <script src="js/cluedo.js"></script>
+</head>
+<body>
+    <div>   <!-- number of players -->
+        Number of players: 
+        <input type="text" id="playerNumber" maxlength="1" size="1">
+        <input type="button" id="playerNumberSubmit" value="Submit">
+    </div>
+
+	<div>	<!-- enter cards to yes -->
+		Enter cards to yes: <br>
+		Player: <select id="yesPlayerSelect">
+				<option value="0">1</option>
+				<option value="1">2</option>
+				<option value="2">3</option>
+				<option value="3">4</option>
+				<option value="4">5</option>
+				<option value="5">6</option>
+            </select>
+		Card: <select id="yesCard">
+                <option value="green">Green</option>
+                <option value="mustard">Mustard</option>
+                <option value="peacock">Peacock</option>
+                <option value="plum">Plum</option>
+                <option value="scarlet">Scarlet</option>
+                <option value="white">White</option>
+                <option value="candlestick">Candlestick</option>
+                <option value="dagger">Dagger</option>
+                <option value="pipe">Pipe</option>
+                <option value="revolver">Revolver</option>
+                <option value="rope">Rope</option>
+                <option value="spanner">Spanner</option>
+                <option value="ballroom">Ballroom</option>
+                <option value="billiard">Billiard</option>
+                <option value="conservatory">Conservatory</option>
+                <option value="dining">Dining</option>
+                <option value="hall">Hall</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="library">Library</option>
+                <option value="lounge">Lounge</option>
+                <option value="study">Study</option>
+            </select>
+		<input type="button" id="yesCardSubmit" value="Submit">
+	</div>
+
+	<div>	<!-- enter cards to no -->
+		Enter cards to no: <br>
+		Player: <select id="noPlayerSelect">
+				<option value="0">1</option>
+				<option value="1">2</option>
+				<option value="2">3</option>
+				<option value="3">4</option>
+				<option value="4">5</option>
+				<option value="5">6</option>
+			</select>
+		Card: <select id="noCard">
+            <option value="green">Green</option>
+            <option value="mustard">Mustard</option>
+            <option value="peacock">Peacock</option>
+            <option value="plum">Plum</option>
+            <option value="scarlet">Scarlet</option>
+            <option value="white">White</option>
+            <option value="candlestick">Candlestick</option>
+            <option value="dagger">Dagger</option>
+            <option value="pipe">Pipe</option>
+            <option value="revolver">Revolver</option>
+            <option value="rope">Rope</option>
+            <option value="spanner">Spanner</option>
+            <option value="ballroom">Ballroom</option>
+            <option value="billiard">Billiard</option>
+            <option value="conservatory">Conservatory</option>
+            <option value="dining">Dining</option>
+            <option value="hall">Hall</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="library">Library</option>
+            <option value="lounge">Lounge</option>
+            <option value="study">Study</option>
+        </select>
+		<input type="button" id="noCardSubmit" value="Submit">
+	</div>
+
+    <div>   <!-- enter guess -->
+        Enter guess: <br>
+        Suspect: <select id="suspectGuessSelect">
+            <option value="green">Green</option>
+            <option value="mustard">Mustard</option>
+            <option value="peacock">Peacock</option>
+            <option value="plum">Plum</option>
+            <option value="scarlet">Scarlet</option>
+            <option value="white">White</option>
+        </select>
+        Weapon: <select id="weaponGuessSelect">
+            <option value="candlestick">Candlestick</option>
+            <option value="dagger">Dagger</option>
+            <option value="pipe">Pipe</option>
+            <option value="revolver">Revolver</option>
+            <option value="rope">Rope</option>
+            <option value="spanner">Spanner</option>
+        </select>
+        Room: <select id="roomGuessSelect">
+			<option value="ballroom">Ballroom</option>
+			<option value="billiard">Billiard</option>
+			<option value="conservatory">Conservatory</option>
+			<option value="dining">Dining</option>
+			<option value="hall">Hall</option>
+			<option value="kitchen">Kitchen</option>
+			<option value="library">Library</option>
+			<option value="lounge">Lounge</option>
+			<option value="study">Study</option>
+		</select> <br>
+        Responding player: <select id="respondingPlayer">
+			<option value="0">1</option>
+			<option value="1">2</option>
+			<option value="2">3</option>
+			<option value="3">4</option>
+			<option value="4">5</option>
+			<option value="5">6</option>
+		</select>
+		Response: <select id="guessResponse">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</select>
+		<input type="submit" id="guessSubmit" value="Submit">
+		
+    </div>
+
+    <div>   <!-- probability table -->
+        Probability Table: The probability of each card being in the centre pile
+        <table id="probabilityTable">
+            <th colspan="2">Suspects</th>
+            <th colspan="2">Weapons</th>
+            <th colspan="2">Rooms</th>
+            <tr>
+                <td>Green</td>
+                <td></td>
+                <td>Candlestick</td>
+                <td></td>
+                <td>Ballroom</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Mustard</td>
+                <td></td>
+                <td>Dagger</td>
+                <td></td>
+                <td>Billiard</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Peacock</td>
+                <td></td>
+                <td>Pipe</td>
+                <td></td>
+                <td>Conservatory</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Plum</td>
+                <td></td>
+                <td>Revolver</td>
+                <td></td>
+                <td>Dining</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Scarlet</td>
+                <td></td>
+                <td>Rope</td>
+                <td></td>
+                <td>Hall</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>White</td>
+                <td></td>
+                <td>Spanner</td>
+                <td></td>
+                <td>Kitchen</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Library</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Lounge</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Study</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div>   <!-- suspect table -->
+        <table id="suspectTable">
+            <th>Players</th>
+            <th colspan="6">Suspects</th>
+            <tr>
+                <td></td>
+                <td>Green</td>
+                <td>Mustard</td>
+                <td>Peacock</td>
+                <td>Plum</td>
+                <td>Scarlet</td>
+                <td>White</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>   <!-- weapon table -->
+        <table id="weaponTable">
+            <th>Players</th>
+            <th colspan="6">Weapons</th>
+            <tr>
+                <td></td>
+                <td>Candlestick</td>
+                <td>Dagger</td>
+                <td>Pipe</td>
+                <td>Revolver</td>
+                <td>Rope</td>
+                <td>Spanner</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+            </tr>
+        </table>
+	</div>
+	
+	<div>	<!-- room table -->
+        <table id="roomTable">
+			<th>Players</th>
+			<th colspan="9">Rooms</th>
+			<tr>
+				<td></td>
+				<td>Ballroom</td>
+				<td>Billiard</td>
+				<td>Conservatory</td>
+				<td>Dining</td>
+				<td>Hall</td>
+				<td>Kitchen</td>
+				<td>Library</td>
+				<td>Lounge</td>
+				<td>Study</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+				<td>?</td>
+			</tr>
+		</table>		
+    </div>
+    
+</body>
