@@ -11,7 +11,7 @@ The **Probability table** keeps track of the probability of each card being in t
 
 >(1 - N<sub>y</sub>)/((N<sub>p</sub> + 1) - (N<sub>p</sub> - N<sub>m</sub>))
 
-Where *N<sub>y</sub>*
+Where *N<sub>y</sub>* is the number of players who have this card, the maximum value this can have is 1. The probability of this card being in the centre envelope drops to zero when a player has this card. *N<sub>p</sub>* is the number of players. N<sub>m</sub> is the number of players who might have this card. This number drops as it is proven that players have or don't have this card. 
 
 ## How to use Cluedo solver 
 This application can be found here: https://conordavenport.github.io/cluedo/.
