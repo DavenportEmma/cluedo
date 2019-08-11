@@ -258,7 +258,7 @@ function enterCardToYes(yesPlayer, yesCard)
 {
 	if(yesPlayer > Np)	// if the input player is greater than the total number of players	
 	{
-		console.log("invalid player");
+		alert("invalid player");
 		return;
 	}
 	yesPlayer--;	// decrement player ID number for zero indexed array
@@ -312,7 +312,7 @@ function enterCardToNo(noPlayer, noCard)
 {
 	if(noPlayer > Np)	// if the input player is greater than the total number of players	
 	{
-		console.log("invalid player");
+		alert("invalid player");
 		return;
 	}
 	noPlayer--;	// decrement player number for zero indexed array
