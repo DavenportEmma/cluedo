@@ -1,5 +1,2 @@
 # cluedo solving program
-The aim of this project is to develop a program that can solve a game of cluedo.
-
-This project was started after a humiliating loss in a game of Cluedo.
-
+The aim of this project is to develop a program that can solve a game of Cluedo. This project was started after a humiliating loss in a game of Cluedo. This project brief assumes the user knows the game and knows how to play the game. Rules to Cluedo are found here https://en.wikipedia.org/wiki/Cluedo#Rules.This program compiles sorts all of the cards, the suspects, rooms, and weapons into three sets for each player. The yes set contains cards that we know the player has, the no set contains cards that we know the player doesn't have
