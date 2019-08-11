@@ -12,16 +12,26 @@ span
 	border-color: red;
 }
 
-table, th
+.prob
 {
-	border: 1px solid green;
+	border: 2px solid brown
 }
 
-td
+.card
+{
+	border: 2px solid green;
+}
+
+td, th
 {
 	border: 1px solid green;
 	word-wrap: none;
 	overflow: hidden;
 	width: 110px;
 	max-width: 110px;
+}
+
+.guess
+{
+	border: 2px solid yellow;
 }
