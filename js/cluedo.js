@@ -104,15 +104,65 @@ function updateProbTable()
 // update player cards tables
 function updateCardTables()
 {
-	var table = document.getElementById("suspectTable").rows;	// get player suspect card table, collection of rows
-	var i, j, playerNum, p;
+	var i, j, playerNum, table, d;
+	// update suspect table
+	table = document.getElementById("suspectTable").rows;	// get player suspect card table, collection of rows
 	for(i = 2; i < 8; i++)	// iterate through rows, row header at row 0, suspect names at row 1
 	{
-		playerNum = i - 2;	// row 2 = player 1 = index 0 in players array
+		d = table[i].cells;	// d is the collection of cells in row i
+		playerNum = players[i-2];	// get player corresponding to row i
 		for(j = 1; j < 7; j++)	// iterate through columns, player numbers at row 0
 		{
-			p = players[playerNum];
-
+			// find what cards this player has in their yes array
+			// find the index of suspect in yes array, returns -1 if suspect name not present
+			if(playerNum.suspects.yes.indexOf(suspectNames[j-1]) != -1)	// if suspect card is present in player yes array
+			{
+				d[j].innerHTML = "✔";
+			}
+			else if(playerNum.suspects.no.indexOf(suspectNames[j-1]) != -1)	// else if suspect card is present in player no array
+			{
+				d[j].innerHTML = "✘";
+			}
+		}
+	}
+	// update weapon table
+	table = document.getElementById("weaponTable").rows;	// get player weapon card table, collection of rows
+	for(i = 2; i < 8; i++)	// iterate through rows, row header at row 0, weapon names at row 1
+	{
+		d = table[i].cells;	// d is the collection of cells in row i
+		playerNum = players[i-2];	// get player corresponding to row i
+		for(j = 1; j < 7; j++)	// iterate through columns, player numbers at row 0
+		{
+			// find what cards this player has in their yes array
+			// find the index of weapon in yes array, returns -1 if weapon name not present
+			if(playerNum.weapons.yes.indexOf(weaponNames[j-1]) != -1)	// if weapon card is present in player yes array
+			{
+				d[j].innerHTML = "✔";
+			}
+			else if(playerNum.weapons.no.indexOf(weaponNames[j-1]) != -1)	// else if weapon card is present in player no array
+			{
+				d[j].innerHTML = "✘";
+			}
+		}
+	}
+	// update room table
+	table = document.getElementById("roomTable").rows;	// get player room card table, collection of rows
+	for(i = 2; i < 8; i++)	// iterate through rows, row header at row 0, room names at row 1
+	{
+		d = table[i].cells;	// d is the collection of cells in row i
+		playerNum = players[i-2];	// get player corresponding to row i
+		for(j = 1; j < 10; j++)	// iterate through columns, player numbers at row 0
+		{
+			// find what cards this player has in their yes array
+			// find the index of room in yes array, returns -1 if room name not present
+			if(playerNum.rooms.yes.indexOf(roomNames[j-1]) != -1)	// if room card is present in player yes array
+			{
+				d[j].innerHTML = "✔";
+			}
+			else if(playerNum.rooms.no.indexOf(roomNames[j-1]) != -1)	// else if room card is present in player no array
+			{
+				d[j].innerHTML = "✘";
+			}
 		}
 	}
 }
@@ -306,10 +356,12 @@ function enterCardToYes(yesPlayer, yesCard)
 	}
 	updateOtherPlayers(yesPlayer,type,yesCard);	// move yesCard from the other players' maybe arrays to no arrays
 	updateProbTable();
+	updateCardTables();
 }
 
 function enterCardToNo(noPlayer, noCard)
 {
+	console.log("enter cards to no");
 	if(noPlayer > Np)	// if the input player is greater than the total number of players	
 	{
 		alert("invalid player");
@@ -323,33 +375,35 @@ function enterCardToNo(noPlayer, noCard)
 		case "suspect":
 			if(removeElement(players[noPlayer].suspects.maybe,noCard))	// if card is in maybe array
 			{
-				players[noPlayer].suspects.no.push(yesCard);	// add card to no array
+				players[noPlayer].suspects.no.push(noCard);	// add card to no array
 				noCardIndex = suspectNames.indexOf(noCard);	// get index of card in suspectList
 				suspectList[noCardIndex].Nm--;
 				calcProb(suspectList[noCardIndex]);
 			}
+			break;
 		case "weapon":
 			if(removeElement(players[noPlayer].weapons.maybe,noCard))	// if card is in maybe array
 			{
-				players[noPlayer].weapons.no.push(yesCard);	// add card to no array
+				players[noPlayer].weapons.no.push(noCard);	// add card to no array
 				noCardIndex = weaponNames.indexOf(noCard);	// get index of card in suspectList
 				weaponList[noCardIndex].Nm--;
 				calcProb(weaponList[noCardIndex]);
 			}
-
+			break;
 		case "room":
 			if(removeElement(players[noPlayer].rooms.maybe,noCard))	// if card is in maybe array
 			{
-				players[noPlayer].rooms.no.push(yesCard);	// add card to no array
+				players[noPlayer].rooms.no.push(noCard);	// add card to no array
 				noCardIndex = roomNames.indexOf(noCard);	// get index of card in suspectList
 				roomList[noCardIndex].Nm--;
 				calcProb(roomList[noCardIndex]);
 			}
-
+			break;
 		default:
 			break;
 	}
 	updateProbTable();
+	updateCardTables();
 }
 
 // enter player guess
@@ -377,6 +431,15 @@ window.onload = function()
 				document.getElementById("noPlayerSelect").value,
 				document.getElementById("noCard").value);
 		});
-	document.getElementById("guessSubmit").addEventListener("click",enterGuess);
+	document.getElementById("guessSubmit").addEventListener("click",
+		function()
+		{
+			enterGuess(
+				document.getElementById("suspectGuessSelect").value,
+				document.getElementById("weaponGuessSelect").value,
+				document.getElementById("roomGuessSelect").value,
+				document.getElementById("respondingPlayer").value,
+				document.getElementById("guessResponse").value);
+		});
 	initPlayerArray();
 }
