@@ -175,7 +175,7 @@ function updateCardTables()
 function playerNumberUpdate()
 {
 	var num = document.getElementById("playerNumber").value;
-	if(num < 3 || num > 6)	// cluedo rules have minimum of 3 and maximum of 6 players
+	if(num < 3 || num > 6 || isNaN(num))	// cluedo rules have minimum of 3 and maximum of 6 players
 	{
 		alert("invalid number of players");
 	}
