@@ -9,7 +9,7 @@ This program was originally written in C++ to figure out how the system should w
 
 Each player has three sets assigned to them; suspects, weapons, and rooms. Within these three sets are three more sets; yes, no, and maybe.
 
-```
+
 *	suspects
 	*	yes
 	*	no
@@ -22,7 +22,7 @@ Each player has three sets assigned to them; suspects, weapons, and rooms. Withi
 	*	yes
 	*	no
 	*	maybe
-```
+
 
 The **Probability table** keeps track of the probability of each card being in the centre envelope. This probabilty is calculated using the following equation;	
 
