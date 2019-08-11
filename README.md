@@ -36,7 +36,7 @@ The last three tables are the **Player guess tables**. These tables keep track o
 
 ```
 suspect		weapon		room		response
-----------------------------------------------
+-------------------------------------------------------------
 mustard		rope		hall		yes
 mustard		spanner		kitchen		no
 green		rope		ballroom	no
