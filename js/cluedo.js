@@ -12,6 +12,7 @@ var roomList = [];
 // initiate array with invalid entries
 function initPlayerArray()
 {
+	console.log("initiate player array");
 	var p = 	// player object 
 	{
 		id:0,	// identification number
@@ -46,6 +47,7 @@ function initPlayerArray()
 
 function initCardArray()
 {
+	console.log("initiate card array");
 	var probability = 1 / (Np + 1);
 	var card = 
 	{
@@ -79,6 +81,7 @@ function initCardArray()
 // update card probabilities in table
 function updateProbTable()
 {
+	console.log("update probability table");
 	var table = document.getElementById("probabilityTable").rows;	// get probability table, collection of all rows
 	// update suspect probabilities
 	var i, d;
@@ -104,6 +107,7 @@ function updateProbTable()
 // update player cards tables
 function updateCardTables()
 {
+	console.log("update card tables");
 	var i, j, playerNum, table, d;
 	// update suspect table
 	table = document.getElementById("suspectTable").rows;	// get player suspect card table, collection of rows
@@ -179,19 +183,20 @@ function playerNumberUpdate()
 // remove element e from array a
 function removeElement(a,e)
 {
+	console.log("remove element " + e + " from array " + a);
 	var ind = a.indexOf(e);
 	if(ind == -1)	// card is not present in maybe list
 	{
-		console.log("Value is not present in array");
 		return 0;
 	}
-	a.splice(ind,1);
+	a.splice(ind,1);	// remove 1 element from array a at location ind 
 	return 1;
 }
 
 // put card n of type t in no arrays of players except for player p
 function updateOtherPlayers(p, t, n)
 {
+	console.log("update other players except " + p + " for " + n + " " + t);
 	for(var i = 0; i < Np; i++)	// iterate through players array
 	{
 		if(i != p)	// if index is not equal to the player to be excluded
@@ -242,6 +247,7 @@ function cardType(n)
 // calculate the probability that card c is in the centre pile
 function calcProb(c)
 {
+	console.log("calculate probability for " + c);
 	c.prob = (1 - (c.Ny)) / ((Np + 1) - (Np - c.Nm));
 }
 
@@ -306,12 +312,12 @@ function printCards(pid)
 // call when you know this player has this card
 function enterCardToYes(yesPlayer, yesCard)
 {
-	if(yesPlayer > Np)	// if the input player is greater than the total number of players	
+	console.log("enter " + yesCard + " to player " + yesPlayer);
+	if(yesPlayer > (Np-1))	// if the input player is greater than the total number of players	
 	{
 		alert("invalid player");
 		return;
 	}
-	yesPlayer--;	// decrement player ID number for zero indexed array
 	var type = cardType(yesCard);	// get card type
 	var yesCardIndex;
 	switch(type)
@@ -361,13 +367,12 @@ function enterCardToYes(yesPlayer, yesCard)
 
 function enterCardToNo(noPlayer, noCard)
 {
-	console.log("enter cards to no");
-	if(noPlayer > Np)	// if the input player is greater than the total number of players	
+	console.log("enter card " + noCard + " to player " + noPlayer + " no array");
+	if(noPlayer > (Np-1))	// if the input player is greater than the total number of players	
 	{
 		alert("invalid player");
 		return;
 	}
-	noPlayer--;	// decrement player number for zero indexed array
 	var type = cardType(noCard);	// get type of card, suspect, weapon, or room
 	var noCardIndex;
 	switch(type)
@@ -406,10 +411,124 @@ function enterCardToNo(noPlayer, noCard)
 	updateCardTables();
 }
 
-// enter player guess
-function enterGuess()
+// check card s of type t against checkPlayer's no arrays
+// return -1 if card is not present in array, returns index of card if present
+function checkNoArrays(checkPlayer,t,s)
 {
+	switch(t)
+	{
+		case "suspect":
+			return players[checkPlayer].suspects.no.indexOf(s);
+		case "weapon":
+			return players[checkPlayer].weapons.no.indexOf(s);
+		case "room":
+			return players[checkPlayer].rooms.no.indexOf(s);
+		default:
+			console.log("error");
+			return 0;
+	}
+}
 
+// log guess into player pl for later rechecks
+/*	pl	player id
+	sus	suspect
+	wep	weapon
+	rom	room
+*/
+function logGuess(pl,sus,wep,rom)
+{
+	console.log("log guess " + sus + " " + wep + " " + rom + " for player " + pl);
+	var guess = {
+		suspect:sus,
+		weapon:wep,
+		room:rom
+	};
+	players[pl].guesses.push(guess);	// push guess object into player guesses array
+}
+
+function prevGuessCheck(pr,sus,wp,rm)
+{
+	var s, w, r;	// suspect, weapon, room flags
+
+	// check responding player's no array
+	s = checkNoArrays(pr,"suspect",sus);	// return -1 if suspect is not in no array, return index of suspect otherwise
+	w = checkNoArrays(pr,"weapon",wp);
+	r = checkNoArrays(pr,"room",rm);
+
+	// if 2 out of the 3 cards are in no array, we know the responding player has the third one
+	if(s != -1 && w != -1 && r == -1)	// if suspect and weapon are in the no array
+	{
+		enterCardToYes(pr,rm);	// enter room to yes array
+	}
+	else if(s != -1 && w == -1 && r != -1)	// if suspect and room are in the no array
+	{
+		enterCardToYes(pr,wp);	// enter weapon to yes array
+	}
+	else if(s == -1 && w != -1 && r != -1)	// if weapon and room are in the no array
+	{
+		enterCardToYes(pr,sus);	// enter suspect to yes array
+	}	
+}
+
+// the current guess may have given us info that would have changed the info we learned
+// of a previous guess
+// run through previous guesses to check
+function runPrevGuesses(pl)
+{
+	console.log("run previous guesses for player " + pl);
+	var suspectGuess, weaponGuess, roomGuess, i;
+	for(i = 0; i < players[pl].guesses.length; i++)	// increment through previous guesses
+	{
+		suspectGuess = players[pl].guesses[i].suspect;
+		weaponGuess = players[pl].guesses[i].weapon;
+		roomGuess = players[pl].guesses[i].room;
+		prevGuessCheck(pl,suspectGuess, weaponGuess, roomGuess);	// check previous guess
+	}
+}
+
+// enter player guess
+/*	sus		suspect
+	wep		weapon
+	rom	room
+	rp		responding player id number
+	res		guess response, 0 if no card, 1 if card
+*/
+function enterGuess(sus, wep, rom, rp, res)
+{
+	console.log(sus + " " + wep + " " + rom + " " + " response: " + res);
+	if(res == 0)	// if responding player doesn't have the suspect, weapon, or room
+	{	// enter suspect, weapon, and card into responding player's no arrays
+		enterCardToNo(rp,sus);
+		enterCardToNo(rp,wep);
+		enterCardToNo(rp,rom);
+	}
+	else	// if the responding player has at least one of the cards and shows it to the guessing player
+	{
+		// check responding player's no arrays
+		s = checkNoArrays(rp,"suspect",sus);	// return 1 if suspect is in no array
+		w = checkNoArrays(rp,"weapon",wep);	// return 1 if weapon is in no array
+		r = checkNoArrays(rp,"room",rom);	// return 1 if room is in no array
+		console.log(sus + ":" + s + " " + wep + ":" + w + " " + rom + ":" + r);
+		// if 2 out of the 3 cards are in no arrays, we know the responding player has the third one
+		if(s != -1 && w != -1 && r == -1)	// if suspect and weapon are in the no arrays
+		{
+			enterCardToYes(rp,rom);	// enter room to yes array
+		}
+		else if(s != -1 && w == -1 && r != -1)	// if suspect and room are in the no arrays
+		{
+			enterCardToYes(rp,wep);	// enter weapon to yes array
+		}
+		else if(s == -1 && w != -1 && r != -1)	// if weapon and room are in the no arrays
+		{
+			enterCardToYes(rp,sus);	// enter suspect to yes array
+		}
+		else
+		{
+			// log the guess to check later when more information becomes available
+			logGuess(rp,sus,wep,rom);
+		}
+	}
+	runPrevGuesses(rp);	// check previous guesses against new information
 }
 
 // prevents scripts from running before elements have loaded
