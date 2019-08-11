@@ -323,6 +323,7 @@ function enterCardToNo(noPlayer, noCard)
 	updateProbTable();
 }
 
+// enter player guess
 function enterGuess()
 {
 
