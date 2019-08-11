@@ -175,9 +175,16 @@ function updateCardTables()
 function playerNumberUpdate()
 {
 	var num = document.getElementById("playerNumber").value;
-	Np = parseInt(num,10);	// convert base 10 string representation of number to int
-	console.log(Np + " players");
-	initCardArray();	// initiate card array with new number of players
+	if(num < 3 || num > 6)	// cluedo rules have minimum of 3 and maximum of 6 players
+	{
+		alert("invalid number of players");
+	}
+	else
+	{
+		Np = parseInt(num,10);	// convert base 10 string representation of number to int
+		console.log(Np + " players");
+		initCardArray();	// initiate card array with new number of players
+	}
 }
 
 // remove element e from array a
