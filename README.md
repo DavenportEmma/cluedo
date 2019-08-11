@@ -45,6 +45,7 @@ If taken individually the three responses can tell us some information;
 *	Response 1 tells us that player 3 has mustard, rope, and or hall.
 *	Response 2 tells us that player 3 doesn't have mustard, spanner, and kitchen. These three cards are moved to the no set.
 *	Response 3 tells us that player 3 doesn't have green, rope, ballroom. These three cards are moved to the no set.
+
 After response 3 we can compare response 1 against player 3's card sets again. Response 1 told us that player 3 has mustard, rope, and or hall but the following responses told us that player 3 doesn't have mustard or rope, therefore it has been proven that player 3 has hall.
 
 ## How to use Cluedo solver
