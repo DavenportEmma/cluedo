@@ -84,6 +84,19 @@
 		<input type="button" id="noCardSubmit" value="Submit">
 	</div>
 
+    <div>   <!-- card fill -->
+        Press "Submit" to sort all cards that have not been moved to the yes array into the no array <br>
+		Player: <select id="fillPlayerSelect">
+				<option value="0">1</option>
+				<option value="1">2</option>
+				<option value="2">3</option>
+				<option value="3">4</option>
+				<option value="4">5</option>
+				<option value="5">6</option>
+            </select>
+            <input type="button" id="cardFillSubmit" value="Submit">
+    </div>
+
     <div>   <!-- enter guess -->
         Enter guess: <br>
         Suspect: <select id="suspectGuessSelect">
@@ -131,7 +144,7 @@
 
     <div>   <!-- probability table -->
         Probability Table: The probability of each card being in the centre pile
-        <table id="probabilityTable">
+        <table id="probabilityTable" class="prob">
             <th colspan="2">Suspects</th>
             <th colspan="2">Weapons</th>
             <th colspan="2">Rooms</th>
@@ -210,8 +223,15 @@
         </table>
     </div>
 
+    <div>   <!-- player cards -->
+        Player cards
+        <p>? = player might have this card</p>
+        <p>✔ = player has this card</p>
+        <p>✘ = player does not have this card</p>
+    </div>
+
     <div>   <!-- suspect table -->
-        <table id="suspectTable">
+        <table id="suspectTable" class="card">
             <th>Players</th>
             <th colspan="6">Suspects</th>
             <tr>
@@ -281,7 +301,7 @@
     </div>
 
     <div>   <!-- weapon table -->
-        <table id="weaponTable">
+        <table id="weaponTable" class="card">
             <th>Players</th>
             <th colspan="6">Weapons</th>
             <tr>
@@ -351,7 +371,7 @@
 	</div>
 	
 	<div>	<!-- room table -->
-        <table id="roomTable">
+        <table id="roomTable" class="card">
 			<th>Players</th>
 			<th colspan="9">Rooms</th>
 			<tr>
@@ -441,4 +461,241 @@
 		</table>		
     </div>
     
+    <div>   <!-- player guesses -->
+        Player guesses
+        <p>Blank cell = player has not asked this card</p>
+        <p># = player has asked this card</p>
+    </div>
+
+    <div>   <!-- suspect guess table -->
+        <table id="suspectGuessTable" class="guess">
+            <th>Players</th>
+            <th colspan="6">Suspects</th>
+            <tr>
+                <td></td>
+                <td>Green</td>
+                <td>Mustard</td>
+                <td>Peacock</td>
+                <td>Plum</td>
+                <td>Scarlet</td>
+                <td>White</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div>   <!-- weapon guess table -->
+        <table id="weaponGuessTable" class="guess">
+            <th>Players</th>
+            <th colspan="6">Weapons</th>
+            <tr>
+                <td></td>
+                <td>Candlestick</td>
+                <td>Dagger</td>
+                <td>Pipe</td>
+                <td>Revolver</td>
+                <td>Rope</td>
+                <td>Spanner</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+	</div>
+	
+	<div>	<!-- room guess table -->
+        <table id="roomGuessTable" class="guess">
+			<th>Players</th>
+			<th colspan="9">Rooms</th>
+			<tr>
+				<td></td>
+				<td>Ballroom</td>
+				<td>Billiard</td>
+				<td>Conservatory</td>
+				<td>Dining</td>
+				<td>Hall</td>
+				<td>Kitchen</td>
+				<td>Library</td>
+				<td>Lounge</td>
+				<td>Study</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>		
+    </div>
+
 </body>
