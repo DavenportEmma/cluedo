@@ -104,6 +104,64 @@ function updateProbTable()
 	}
 }
 
+// update table of player guesses
+function updateGuessTables()
+{
+	console.log("update guess tables");
+	var i, j, p, table, d, guessIndex;
+	// update suspect guess table
+	table = document.getElementById("suspectGuessTable").rows;	// get player suspect guess table, collection of rows
+	for(i = 2; i < 8; i++)	// iterate through rows, row header at row 0, suspect names at row 1
+	{
+		d = table[i].cells;	// d is the collection of cells in row i
+		p = players[i-2];	// get player corresponding to row i
+		
+		for(j = 0; j < p.guesses.length; j++)	// iterate through player guesses array
+		{
+			// get the suspect of the guess, search for it in the suspect names array and return its index in that array
+			guessIndex = suspectNames.indexOf(p.guesses[j].suspect);	// eg green = 0
+			// because both the suspectNames array and the list of suspects in the table are both alphabetical
+			// we can use guessIndex to input data into the cell that corresponds with the same suspect
+			// put "!" in cell that the player has guessed
+			d[guessIndex + 1] = "!";	// increment guessIndex as column 0 contains player numbers
+		}
+	}
+	// update weapon guess table
+	table = document.getElementById("weaponGuessTable").rows;	// get player weapon guess table, collection of rows
+	for(i = 2; i < 8; i++)	// iterate through rows, row header at row 0, suspect names at row 1
+	{
+		d = table[i].cells;	// d is the collection of cells in row i
+		p = players[i-2];	// get player corresponding to row i
+		
+		for(j = 0; j < p.guesses.length; j++)	// iterate through player guesses array
+		{
+			// get the weapon of the guess, search for it in the weapon names array and return its index in that array
+			guessIndex = weaponNames.indexOf(p.guesses[j].weapon);	// eg candlestick = 0
+			// because both the weaponNames array and the list of weapons in the table are both alphabetical
+			// we can use guessIndex to input data into the cell that corresponds with the same weapon
+			// put "!" in cell that the player has guessed
+			d[guessIndex + 1] = "!";	// increment guessIndex as column 0 contains player numbers
+		}
+	}
+	// update room guess table
+	table = document.getElementById("roomGuessTable").rows;	// get player room guess table, collection of rows
+	for(i = 2; i < 8; i++)	// iterate through rows, row header at row 0, suspect names at row 1
+	{
+		d = table[i].cells;	// d is the collection of cells in row i
+		p = players[i-2];	// get player corresponding to row i
+		
+		for(j = 0; j < p.guesses.length; j++)	// iterate through player guesses array
+		{
+			// get the room of the guess, search for it in the room names array and return its index in that array
+			guessIndex = roomNames.indexOf(p.guesses[j].room);	// eg ballroom = 0
+			// because both the roomNames array and the list of rooms in the table are both alphabetical
+			// we can use guessIndex to input data into the cell that corresponds with the same room
+			// put "!" in cell that the player has guessed
+			d[guessIndex + 1] = "!";	// increment guessIndex as column 0 contains player numbers
+		}
+	}
+}
+
 // update player cards tables
 function updateCardTables()
 {
@@ -451,6 +509,7 @@ function logGuess(pl,sus,wep,rom)
 		room:rom
 	};
 	players[pl].guesses.push(guess);	// push guess object into player guesses array
+	updateGuessTables();
 }
 
 function prevGuessCheck(pr,sus,wp,rm)

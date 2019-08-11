@@ -131,7 +131,7 @@
 
     <div>   <!-- probability table -->
         Probability Table: The probability of each card being in the centre pile
-        <table id="probabilityTable">
+        <table id="probabilityTable" class="prob">
             <th colspan="2">Suspects</th>
             <th colspan="2">Weapons</th>
             <th colspan="2">Rooms</th>
@@ -218,7 +218,7 @@
     </div>
 
     <div>   <!-- suspect table -->
-        <table id="suspectTable">
+        <table id="suspectTable" class="card">
             <th>Players</th>
             <th colspan="6">Suspects</th>
             <tr>
@@ -288,7 +288,7 @@
     </div>
 
     <div>   <!-- weapon table -->
-        <table id="weaponTable">
+        <table id="weaponTable" class="card">
             <th>Players</th>
             <th colspan="6">Weapons</th>
             <tr>
@@ -358,7 +358,7 @@
 	</div>
 	
 	<div>	<!-- room table -->
-        <table id="roomTable">
+        <table id="roomTable" class="card">
 			<th>Players</th>
 			<th colspan="9">Rooms</th>
 			<tr>
@@ -451,11 +451,11 @@
     <div>   <!-- player guesses -->
         Player guesses
         <p>Blank cell = player has not asked this card</p>
-        <p>? = player has asked this card</p>
+        <p>! = player has asked this card</p>
     </div>
 
     <div>   <!-- suspect guess table -->
-        <table id="suspectGuessTable">
+        <table id="suspectGuessTable" class="guess">
             <th>Players</th>
             <th colspan="6">Suspects</th>
             <tr>
@@ -525,7 +525,7 @@
     </div>
 
     <div>   <!-- weapon guess table -->
-        <table id="weaponGuessTable">
+        <table id="weaponGuessTable" class="guess">
             <th>Players</th>
             <th colspan="6">Weapons</th>
             <tr>
@@ -595,7 +595,7 @@
 	</div>
 	
 	<div>	<!-- room guess table -->
-        <table id="roomGuessTable">
+        <table id="roomGuessTable" class="guess">
 			<th>Players</th>
 			<th colspan="9">Rooms</th>
 			<tr>
