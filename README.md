@@ -11,6 +11,8 @@ The **Probability table** keeps track of the probability of each card being in t
 
 >(1 - N<sub>y</sub>)/((N<sub>p</sub> + 1) - (N<sub>p</sub> - N<sub>m</sub>))
 
+Where *N<sub>y</sub>*
+
 ## How to use Cluedo solver 
 This application can be found here: https://conordavenport.github.io/cluedo/.
 
