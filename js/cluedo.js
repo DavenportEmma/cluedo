@@ -78,6 +78,33 @@ function initCardArray()
 	updateProbTable();	// update probability table
 }
 
+// move all cards from maybe to no array
+function fillNoArray(playerNum)
+{
+	if(playerNum > (Np-1))	// if the input player is greater than the total number of players	
+	{
+		alert("invalid player");
+		return;
+	}
+	var i;
+
+	while(players[playerNum].suspects.maybe.length > 0)	// while there are elements in the maybe array
+	{
+		enterCardToNo(playerNum, players[playerNum].suspects.maybe[0]);	// remove the first element of the array
+		// enterCardToNo uses splice() to remove elements from arrays
+		// this will pop elements off the front and shift everything forwards
+		// the size of the array is constantly changing, that's why a while loop is being used
+	}
+	while(players[playerNum].weapons.maybe.length > 0)
+	{
+		enterCardToNo(playerNum, players[playerNum].weapons.maybe[0]);
+	}
+	while(players[playerNum].rooms.maybe.length > 0)
+	{
+		enterCardToNo(playerNum, players[playerNum].rooms.maybe[0]);
+	}
+}
+
 // update card probabilities in table
 function updateProbTable()
 {
@@ -123,7 +150,7 @@ function updateGuessTables()
 			// because both the suspectNames array and the list of suspects in the table are both alphabetical
 			// we can use guessIndex to input data into the cell that corresponds with the same suspect
 			// put "!" in cell that the player has guessed
-			d[guessIndex + 1] = "!";	// increment guessIndex as column 0 contains player numbers
+			d[guessIndex + 1].innerHTML = "#";	// increment guessIndex as column 0 contains player numbers
 		}
 	}
 	// update weapon guess table
@@ -140,7 +167,7 @@ function updateGuessTables()
 			// because both the weaponNames array and the list of weapons in the table are both alphabetical
 			// we can use guessIndex to input data into the cell that corresponds with the same weapon
 			// put "!" in cell that the player has guessed
-			d[guessIndex + 1] = "!";	// increment guessIndex as column 0 contains player numbers
+			d[guessIndex + 1].innerHTML = "#";	// increment guessIndex as column 0 contains player numbers
 		}
 	}
 	// update room guess table
@@ -157,7 +184,7 @@ function updateGuessTables()
 			// because both the roomNames array and the list of rooms in the table are both alphabetical
 			// we can use guessIndex to input data into the cell that corresponds with the same room
 			// put "!" in cell that the player has guessed
-			d[guessIndex + 1] = "!";	// increment guessIndex as column 0 contains player numbers
+			d[guessIndex + 1].innerHTML = "#";	// increment guessIndex as column 0 contains player numbers
 		}
 	}
 }
@@ -248,7 +275,7 @@ function playerNumberUpdate()
 // remove element e from array a
 function removeElement(a,e)
 {
-	console.log("remove element " + e + " from array " + a);
+	console.log("remove element " + e + " from array");
 	var ind = a.indexOf(e);
 	if(ind == -1)	// card is not present in maybe list
 	{
@@ -430,6 +457,8 @@ function enterCardToYes(yesPlayer, yesCard)
 	updateCardTables();
 }
 
+// enter card to a player's no array
+// noPlayer 	player id number
 function enterCardToNo(noPlayer, noCard)
 {
 	console.log("enter card " + noCard + " to player " + noPlayer + " no array");
@@ -588,12 +617,8 @@ function enterGuess(sus, wep, rom, rp, res)
 		{
 			enterCardToYes(rp,sus);	// enter suspect to yes array
 		}
-		else
-		{
-			// log the guess to check later when more information becomes available
-			logGuess(rp,sus,wep,rom);
-		}
 	}
+	logGuess(rp,sus,wep,rom);	// log guess
 	runPrevGuesses(rp);	// check previous guesses against new information
 }
 
@@ -615,6 +640,12 @@ window.onload = function()
 			enterCardToNo(
 				document.getElementById("noPlayerSelect").value,
 				document.getElementById("noCard").value);
+		});
+	document.getElementById("cardFillSubmit").addEventListener("click",
+		function()
+		{
+			fillNoArray(
+				document.getElementById("fillPlayerSelect").value);
 		});
 	document.getElementById("guessSubmit").addEventListener("click",
 		function()
