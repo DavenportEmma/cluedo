@@ -256,6 +256,11 @@ function printCards(pid)
 // call when you know this player has this card
 function enterCardToYes(yesPlayer, yesCard)
 {
+	if(yesPlayer > Np)	// if the input player is greater than the total number of players	
+	{
+		console.log("invalid player");
+		return;
+	}
 	yesPlayer--;	// decrement player ID number for zero indexed array
 	var type = cardType(yesCard);	// get card type
 	var yesCardIndex;
@@ -305,6 +310,11 @@ function enterCardToYes(yesPlayer, yesCard)
 
 function enterCardToNo(noPlayer, noCard)
 {
+	if(noPlayer > Np)	// if the input player is greater than the total number of players	
+	{
+		console.log("invalid player");
+		return;
+	}
 	noPlayer--;	// decrement player number for zero indexed array
 	var type = cardType(noCard);	// get type of card, suspect, weapon, or room
 	var noCardIndex;
