@@ -3,7 +3,7 @@ var suspectNames = ["green","mustard","peacock","plum","scarlet","white"];
 var weaponNames = ["candlestick","dagger","pipe","revolver","rope","spanner"];
 var roomNames = ["ballroom","billiard","conservatory","dining","hall","kitchen","library","lounge","study"];
 
-var Np = 6;	// number of players default value 6
+var Np = 6;	// number of players
 var players = [];	// array of player objects with suspect, weapon, and room yes, no, and maybe arrays
 var suspectList = [];
 var weaponList = [];
@@ -73,6 +73,7 @@ function initCardArray()
 		c.name = roomNames[i];
 		roomList.push(c);
 	}
+	updateProbTable();	// update probability table
 }
 
 // update card probabilities in table
@@ -100,11 +101,29 @@ function updateProbTable()
 	}
 }
 
+// update player cards tables
+function updateCardTables()
+{
+	var table = document.getElementById("suspectTable").rows;	// get player suspect card table, collection of rows
+	var i, j, playerNum, p;
+	for(i = 2; i < 8; i++)	// iterate through rows, row header at row 0, suspect names at row 1
+	{
+		playerNum = i - 2;	// row 2 = player 1 = index 0 in players array
+		for(j = 1; j < 7; j++)	// iterate through columns, player numbers at row 0
+		{
+			p = players[playerNum];
+
+		}
+	}
+}
+
 // update the number of players
 function playerNumberUpdate()
 {
-	Np = document.getElementById("playerNumber").value;
+	var num = document.getElementById("playerNumber").value;
+	Np = parseInt(num,10);	// convert base 10 string representation of number to int
 	console.log(Np + " players");
+	initCardArray();	// initiate card array with new number of players
 }
 
 // remove element e from array a
@@ -350,6 +369,4 @@ window.onload = function()
 		});
 	document.getElementById("guessSubmit").addEventListener("click",enterGuess);
 	initPlayerArray();
-	initCardArray();
-	updateProbTable();
 }
