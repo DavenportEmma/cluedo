@@ -17,5 +17,4 @@ This application is designed to be used by someone playing Cluedo. It will keep 
 2. The user assigns a player number to each of the players. The user is player 1 and the next is player 2 and so on.
 
 3. When the cards are dealt to each player, the user goes to the **Enter cards to yes** section. They select their player number from the drop down menu, select one of the cards they have in their hand from the next drop down menu, and press submit. They do this for all the cards they have.
-
 The **Probability table** 
