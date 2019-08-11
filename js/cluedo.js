@@ -247,7 +247,7 @@ function cardType(n)
 // calculate the probability that card c is in the centre pile
 function calcProb(c)
 {
-	console.log("calculate probability for " + c);
+	console.log("calculate probability for " + c.name);
 	c.prob = (1 - (c.Ny)) / ((Np + 1) - (Np - c.Nm));
 }
 
@@ -505,9 +505,9 @@ function enterGuess(sus, wep, rom, rp, res)
 	else	// if the responding player has at least one of the cards and shows it to the guessing player
 	{
 		// check responding player's no arrays
-		s = checkNoArrays(rp,"suspect",sus);	// return 1 if suspect is in no array
-		w = checkNoArrays(rp,"weapon",wep);	// return 1 if weapon is in no array
-		r = checkNoArrays(rp,"room",rom);	// return 1 if room is in no array
+		s = checkNoArrays(rp,"suspect",sus);	// return -1 if suspect is not in no array, return index of suspect otherwise
+		w = checkNoArrays(rp,"weapon",wep);
+		r = checkNoArrays(rp,"room",rom);
 		console.log(sus + ":" + s + " " + wep + ":" + w + " " + rom + ":" + r);
 		// if 2 out of the 3 cards are in no arrays, we know the responding player has the third one
 		if(s != -1 && w != -1 && r == -1)	// if suspect and weapon are in the no arrays
