@@ -585,10 +585,11 @@ function runPrevGuesses(pl)
 /*	sus		suspect
 	wep		weapon
 	rom	room
+	gp		guessing player
 	rp		responding player id number
 	res		guess response, 0 if no card, 1 if card
 */
-function enterGuess(sus, wep, rom, rp, res)
+function enterGuess(sus, wep, rom, gp, rp, res)
 {
 	console.log(sus + " " + wep + " " + rom + " " + " response: " + res);
 	if(res == 0)	// if responding player doesn't have the suspect, weapon, or room
@@ -618,7 +619,7 @@ function enterGuess(sus, wep, rom, rp, res)
 			enterCardToYes(rp,sus);	// enter suspect to yes array
 		}
 	}
-	logGuess(rp,sus,wep,rom);	// log guess
+	logGuess(gp,sus,wep,rom);	// log guess
 	runPrevGuesses(rp);	// check previous guesses against new information
 }
 
@@ -654,6 +655,7 @@ window.onload = function()
 				document.getElementById("suspectGuessSelect").value,
 				document.getElementById("weaponGuessSelect").value,
 				document.getElementById("roomGuessSelect").value,
+				document.getElementById("guessingPlayer").value,
 				document.getElementById("respondingPlayer").value,
 				document.getElementById("guessResponse").value);
 		});
