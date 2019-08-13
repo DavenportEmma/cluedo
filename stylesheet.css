@@ -1,8 +1,18 @@
+body{
+	background-color: white;
+}
+
 div
 {
+	font-size: 2em;
 	border-style: solid;
 	border-width: 1px;
 	border-color: blue;
+}
+
+.tableHolder
+{
+	overflow-x: auto;
 }
 
 span
@@ -27,7 +37,7 @@ td, th
 	border: 1px solid green;
 	word-wrap: none;
 	overflow: hidden;
-	width: 110px;
+	min-width: 110px;
 	max-width: 110px;
 }
 
