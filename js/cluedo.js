@@ -623,6 +623,13 @@ function enterGuess(sus, wep, rom, gp, rp, res)
 	runPrevGuesses(rp);	// check previous guesses against new information
 }
 
+// warns user before reloading page
+window.onbeforeunload = function()
+{
+	console.log("page unload");
+	return "halt";
+}
+
 // prevents scripts from running before elements have loaded
 // add event listeners here
 window.onload = function() 
