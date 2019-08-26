@@ -49,29 +49,11 @@ td, th
 
 .collapsible 
 {
-	background-color: #f8ffe5;
-	margin-top: 10px;
-	margin-bottom: 0px;
-	margin-left: 10px;
-	margin-right: 10px;
-	border-radius: 2px;
 	overflow: hidden;
-	position: relative;
-}
-
-.collapsible:hover 
-{
-  	background-color: #505050;
 }
 
 div.content 
 {
   	display: none;
   	overflow: hidden;
-	background-color: #585858;
-	margin-top: 0px;
-	margin-bottom: 10px;
-	margin-left: 10px;
-	margin-right: 10px;
-	border-radius: 2px;
 }
