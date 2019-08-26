@@ -21,7 +21,7 @@ function initPlayerArray()
 			yes:[],	// it is known the player has these suspects
 			no:[],	// it is known the player doesn't have these suspects
 			maybe:suspectNames	// the player might have these suspects
-		},
+			},
 		weapons:
 		{
 			yes:[],
@@ -623,7 +623,7 @@ function enterGuess(sus, wep, rom, gp, rp, res)
 	runPrevGuesses(rp);	// check previous guesses against new information
 }
 
-
+// stops user from reloading the page and losing game data
 window.onbeforeunload = function()
 {
 	return "halt";
