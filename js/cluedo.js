@@ -747,20 +747,18 @@ window.onbeforeunload = function()
 	return "halt";
 }
 
-// prevents scripts from running before elements have loaded
-// add event listeners here
-window.onload = function() 
+// create collapsible sections that expand/collapse with mouse click
+function initCollapsibles()
 {
-	var coll = document.getElementsByClassName("collapsible");
+	var coll = document.getElementsByClassName("collapsible");	// get array of elements with class collapsible
 	var i;
-
-	for (i = 0; i < coll.length; i++) 
+	for (i = 0; i < coll.length; i++) 	// increment through element array
 	{
-		coll[i].addEventListener("click", function() 
+		coll[i].addEventListener("click", function()	// create event listener for when the head of the collapsible is clicked
 		{
-			this.classList.toggle("active");
-			var content = this.nextElementSibling;
-			if(content.style.display === "block") 
+			this.classList.toggle("active");		
+			var content = this.nextElementSibling;	// get next element in same level
+			if(content.style.display === "block")	// toggle expand/collapse element
 			{
 				content.style.display = "none";
 			} 
@@ -770,6 +768,14 @@ window.onload = function()
 			}
 		});
 	}
+}
+
+// prevents scripts from running before elements have loaded
+// add event listeners here
+window.onload = function() 
+{
+	initCollapsibles();	// create collapsible sections
+	
 	document.getElementById("playerNumberSubmit").addEventListener("click",playerNumberUpdate);
 	document.getElementById("yesCardSubmit").addEventListener("click",
 		function()
