@@ -20,19 +20,22 @@ function initPlayerArray()
 		{
 			yes:[],	// it is known the player has these suspects
 			no:[],	// it is known the player doesn't have these suspects
-			maybe:suspectNames	// the player might have these suspects
+			maybe:suspectNames,	// the player might have these suspects
+			maybeGuessed:suspectNames	// player might have these suspects, card is removed from this array when player guesses, assumes player doesn't guess about cards they have
 			},
 		weapons:
 		{
 			yes:[],
 			no:[],
-			maybe:weaponNames
+			maybe:weaponNames,
+			maybeGuessed:weaponNames
 		},
 		rooms:
 		{
 			yes:[],
 			no:[],
-			maybe:roomNames
+			maybe:roomNames,
+			maybeGuessed:roomNames
 		},
 		guesses:[],	// to hold guesses made at this player
 	};
@@ -54,7 +57,9 @@ function initCardArray()
 		name:"",	// name of card
 		Nm:Np,	// number of times card is in maybe array, all players might have this card
 		Ny:0,	// number of times card is in yes array, all players start with empty yes arrays
-		prob:probability	// probability card is in centre pile
+		prob:probability,	// probability card is in centre pile
+		NmGuessed:Np,	// number of times card is in maybeGuessed array, card is removed from maybeGuessed array when card has been guessed by the player
+		probGuessed:probability	// probability of card being in centre pile, calculated using NmGuessed variable
 	};
 	var i, c;
 	for(i = 0; i < suspectNames.length; i++)	// fill suspectList with card objects
@@ -76,6 +81,7 @@ function initCardArray()
 		roomList.push(c);
 	}
 	updateProbTable();	// update probability table
+	updateProbGuessedTable();
 }
 
 // move all cards from maybe to no array
@@ -128,6 +134,31 @@ function updateProbTable()
 	{   
 		d = table[i].cells;	// d is the collection of cells in row i
 		d[5].innerHTML = roomList[i-1].prob;	// weapon probabilities in column 3
+	}
+}
+
+function updateProbGuessedTable()
+{
+	// update second probability table taking into account player guesses
+	var table = document.getElementById("probabilityGuessedTable").rows;	// get probability table, collection of all rows
+	var i, d;
+	// update suspect probabilities
+	for(i = 1; i < 7; i++)	// iterate through rows, row header at 0, 6 suspects
+	{   
+		d = table[i].cells;	// d is the collection of cells in row i
+		d[1].innerHTML = suspectList[i-1].probGuessed;	// suspect probabilities in column 1
+	}
+	// update weapon probabilities
+	for(i = 1; i < 7; i++)	// iterate through rows, row header at 0, 6 weapons
+	{   
+		d = table[i].cells;	// d is the collection of cells in row i
+		d[3].innerHTML = weaponList[i-1].probGuessed;	// weapon probabilities in column 3
+	}
+	// update room probabilities
+	for(i = 1; i < 10; i++)	// iterate through rows, row header at 0, 6 weapons
+	{   
+		d = table[i].cells;	// d is the collection of cells in row i
+		d[5].innerHTML = roomList[i-1].probGuessed;	// weapon probabilities in column 3
 	}
 }
 
@@ -298,16 +329,19 @@ function updateOtherPlayers(p, t, n)
 			{
 				if(removeElement(noPlayer.suspects.maybe,n))	// remove from maybe & if card is in maybe array
 					noPlayer.suspects.no.push(n);	// add to no vector
+					removeElement(noPlayer.suspects.maybeGuessed,n);	// remove from maybeGuessed array
 			}
 			else if(t == "weapon")
 			{
 				if(removeElement(noPlayer.weapons.maybe,n))	// remove from maybe
 					noPlayer.weapons.no.push(n);	// add to no vector
+					removeElement(noPlayer.weapons.maybeGuessed,n);
 			}
 			else if(t == "room")
 			{
 				if(removeElement(noPlayer.rooms.maybe,n))	// remove from maybe
 					noPlayer.rooms.no.push(n);	// add to no vector
+					removeElement(noPlayer.rooms.maybeGuessed,n);
 			}
 		}
 	}
@@ -340,7 +374,8 @@ function cardType(n)
 function calcProb(c)
 {
 	console.log("calculate probability for " + c.name);
-	c.prob = (1 - (c.Ny)) / ((Np + 1) - (Np - c.Nm));
+	c.prob = (1 - (c.Ny)) / ((Np + 1) - (Np - c.Nm));	// calculate probability for card
+	c.probGuessed = (1 - (c.Ny)) / ((Np + 1) - (Np - c.NmGuessed));	// calc prob for card with player guesses taken into account
 }
 
 // print suspect, weapon, room, yes, no, maybe arrays for player pid
@@ -422,8 +457,12 @@ function enterCardToYes(yesPlayer, yesCard)
 				yesCardIndex = suspectNames.indexOf(yesCard);	// get index of card in suspectName array, same index as in suspectList array
 				suspectList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 				suspectList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
-				calcProb(suspectList[yesCardIndex]);	// recalculate probability
 			}
+			if(removeElement(players[yesPlayer].suspects.maybeGuessed,yesCard))	// if card is in maybeGuessed array
+			{
+				suspectList[yesCardIndex].NmGuessed = 0;	// card will be removed from the other players' maybeGuessed arrays
+			}
+			calcProb(suspectList[yesCardIndex]);	// recalculate probability
 			break;
 
 		case "weapon":
@@ -433,8 +472,12 @@ function enterCardToYes(yesPlayer, yesCard)
 				yesCardIndex = weaponNames.indexOf(yesCard);	// get index of card in weaponList;
 				weaponList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 				weaponList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
-				calcProb(weaponList[yesCardIndex]);	// recalculate probability
 			}
+			if(removeElement(players[yesPlayer].weapons.maybeGuessed,yesCard))
+			{
+				weaponList[yesCardIndex].NmGuessed = 0;	// card will be removed from the other players' maybe arrays
+			}
+			calcProb(weaponList[yesCardIndex]);	// recalculate probability
 			break;
 
 		case "room":
@@ -444,8 +487,12 @@ function enterCardToYes(yesPlayer, yesCard)
 				yesCardIndex = roomNames.indexOf(yesCard);	// get index of card in roomList;
 				roomList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 				roomList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
-				calcProb(roomList[yesCardIndex]);	// recalculate probability
 			}
+			if(removeElement(players[yesPlayer].rooms.maybeGuessed,yesCard))
+			{
+				roomList[yesCardIndex].NmGuessed = 0;	// card will be removed from the other players' maybe arrays
+			}
+			calcProb(roomList[yesCardIndex]);	// recalculate probability
 			break;
 
 		default:
@@ -454,6 +501,7 @@ function enterCardToYes(yesPlayer, yesCard)
 	}
 	updateOtherPlayers(yesPlayer,type,yesCard);	// move yesCard from the other players' maybe arrays to no arrays
 	updateProbTable();
+	updateProbGuessedTable();
 	updateCardTables();
 }
 
@@ -477,8 +525,13 @@ function enterCardToNo(noPlayer, noCard)
 				players[noPlayer].suspects.no.push(noCard);	// add card to no array
 				noCardIndex = suspectNames.indexOf(noCard);	// get index of card in suspectList
 				suspectList[noCardIndex].Nm--;
-				calcProb(suspectList[noCardIndex]);
 			}
+			// remove card from maybeGuessed array
+			if(removeElement(players[noPlayer].suspects.maybeGuessed,noCard))	// if card is in maybeGuessed array
+			{
+				suspectList[noCardIndex].NmGuessed--;
+			}
+			calcProb(suspectList[noCardIndex]);	// recalculate card probability
 			break;
 		case "weapon":
 			if(removeElement(players[noPlayer].weapons.maybe,noCard))	// if card is in maybe array
@@ -486,8 +539,12 @@ function enterCardToNo(noPlayer, noCard)
 				players[noPlayer].weapons.no.push(noCard);	// add card to no array
 				noCardIndex = weaponNames.indexOf(noCard);	// get index of card in suspectList
 				weaponList[noCardIndex].Nm--;
-				calcProb(weaponList[noCardIndex]);
 			}
+			if(removeElement(players[noPlayer].weapons.maybeGuessed,noCard))
+			{
+				weaponList[noCardIndex].NmGuessed--;
+			}
+			calcProb(weaponList[noCardIndex]);
 			break;
 		case "room":
 			if(removeElement(players[noPlayer].rooms.maybe,noCard))	// if card is in maybe array
@@ -495,13 +552,18 @@ function enterCardToNo(noPlayer, noCard)
 				players[noPlayer].rooms.no.push(noCard);	// add card to no array
 				noCardIndex = roomNames.indexOf(noCard);	// get index of card in suspectList
 				roomList[noCardIndex].Nm--;
-				calcProb(roomList[noCardIndex]);
 			}
+			if(removeElement(players[noPlayer].rooms.maybeGuessed,noCard))
+			{		
+				roomList[noCardIndex].NmGuessed--;
+			}
+			calcProb(roomList[noCardIndex]);
 			break;
 		default:
 			break;
 	}
 	updateProbTable();
+	updateProbGuessedTable();
 	updateCardTables();
 }
 
@@ -581,6 +643,38 @@ function runPrevGuesses(pl)
 	}
 }
 
+// assuming players don't make guesses about the cards they have
+// remove the suspect, weapon, and room from the player's maybeGuessed array, and update probability
+function enterGuessToNo(guessingPlayer,sus,wep,rom)
+{
+	var guessedCardIndex;
+	// suspect
+	removeElement(players[guessingPlayer].suspects.maybeGuessed,sus);	// remove sus from suspect maybeGuessed array
+	guessedCardIndex = suspectNames.indexOf(sus);	// get index of card in suspectName array, same index as in suspectList array
+	suspectList[guessedCardIndex].NmGuessed--;	// decrement counter
+	if(suspectList[guessedCardIndex].NmGuessed <= 0)
+		suspectList[guessedCardIndex].NmGuessed = 0;
+	calcProb(suspectList[guessedCardIndex]);	// recalculate probability for card
+
+	// weapon
+	removeElement(players[guessingPlayer].weapons.maybeGuessed,wep);
+	guessedCardIndex = weaponNames.indexOf(wep);
+	weaponList[guessedCardIndex].NmGuessed--;
+	if(weaponList[guessedCardIndex].NmGuessed <= 0)
+		weaponList[guessedCardIndex].NmGuessed = 0;
+	calcProb(weaponList[guessedCardIndex]);
+
+	// room
+	removeElement(players[guessingPlayer].rooms.maybeGuessed,rom);
+	guessedCardIndex = roomNames.indexOf(rom);
+	roomList[guessedCardIndex].NmGuessed--;
+	if(roomList[guessedCardIndex].NmGuessed <= 0)
+		roomList[guessedCardIndex].NmGuessed = 0;
+	calcProb(roomList[guessedCardIndex]);
+
+	updateProbGuessedTable();
+}
+
 // enter player guess
 /*	sus		suspect
 	wep		weapon
@@ -592,6 +686,16 @@ function runPrevGuesses(pl)
 function enterGuess(sus, wep, rom, gp, rp, res)
 {
 	console.log(sus + " " + wep + " " + rom + " " + " response: " + res);
+	if(gp > (Np-1))	// if the input player is greater than the total number of players	
+	{
+		alert("invalid player");
+		return;
+	}
+	if(rp > (Np-1))	// if the input player is greater than the total number of players	
+	{
+		alert("invalid player");
+		return;
+	}
 	if(res == 0)	// if responding player doesn't have the suspect, weapon, or room
 	{	// enter suspect, weapon, and card into responding player's no arrays
 		enterCardToNo(rp,sus);
@@ -619,6 +723,9 @@ function enterGuess(sus, wep, rom, gp, rp, res)
 			enterCardToYes(rp,sus);	// enter suspect to yes array
 		}
 	}
+
+	enterGuessToNo(gp,sus,wep,rom);	// assumes guessing player gp only makes guesses about cards they don't have
+
 	logGuess(gp,sus,wep,rom);	// log guess
 	runPrevGuesses(rp);	// check previous guesses against new information
 }
