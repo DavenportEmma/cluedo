@@ -457,12 +457,14 @@ function enterCardToYes(yesPlayer, yesCard)
 				yesCardIndex = suspectNames.indexOf(yesCard);	// get index of card in suspectName array, same index as in suspectList array
 				suspectList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 				suspectList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(suspectList[yesCardIndex]);	// recalculate probability
 			}
 			if(removeElement(players[yesPlayer].suspects.maybeGuessed,yesCard))	// if card is in maybeGuessed array
 			{
 				suspectList[yesCardIndex].NmGuessed = 0;	// card will be removed from the other players' maybeGuessed arrays
+				calcProb(suspectList[yesCardIndex]);
 			}
-			calcProb(suspectList[yesCardIndex]);	// recalculate probability
+			
 			break;
 
 		case "weapon":
@@ -472,12 +474,13 @@ function enterCardToYes(yesPlayer, yesCard)
 				yesCardIndex = weaponNames.indexOf(yesCard);	// get index of card in weaponList;
 				weaponList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 				weaponList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(weaponList[yesCardIndex]);
 			}
 			if(removeElement(players[yesPlayer].weapons.maybeGuessed,yesCard))
 			{
 				weaponList[yesCardIndex].NmGuessed = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(weaponList[yesCardIndex]);
 			}
-			calcProb(weaponList[yesCardIndex]);	// recalculate probability
 			break;
 
 		case "room":
@@ -487,12 +490,13 @@ function enterCardToYes(yesPlayer, yesCard)
 				yesCardIndex = roomNames.indexOf(yesCard);	// get index of card in roomList;
 				roomList[yesCardIndex].Ny = 1;	// card is in 1 yes pile
 				roomList[yesCardIndex].Nm = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(roomList[yesCardIndex]);
 			}
 			if(removeElement(players[yesPlayer].rooms.maybeGuessed,yesCard))
 			{
 				roomList[yesCardIndex].NmGuessed = 0;	// card will be removed from the other players' maybe arrays
+				calcProb(roomList[yesCardIndex]);
 			}
-			calcProb(roomList[yesCardIndex]);	// recalculate probability
 			break;
 
 		default:
@@ -525,13 +529,15 @@ function enterCardToNo(noPlayer, noCard)
 				players[noPlayer].suspects.no.push(noCard);	// add card to no array
 				noCardIndex = suspectNames.indexOf(noCard);	// get index of card in suspectList
 				suspectList[noCardIndex].Nm--;
+				calcProb(suspectList[noCardIndex]);	// recalculate card probability
 			}
 			// remove card from maybeGuessed array
 			if(removeElement(players[noPlayer].suspects.maybeGuessed,noCard))	// if card is in maybeGuessed array
 			{
 				suspectList[noCardIndex].NmGuessed--;
+				calcProb(suspectList[noCardIndex]);
 			}
-			calcProb(suspectList[noCardIndex]);	// recalculate card probability
+			
 			break;
 		case "weapon":
 			if(removeElement(players[noPlayer].weapons.maybe,noCard))	// if card is in maybe array
@@ -539,12 +545,13 @@ function enterCardToNo(noPlayer, noCard)
 				players[noPlayer].weapons.no.push(noCard);	// add card to no array
 				noCardIndex = weaponNames.indexOf(noCard);	// get index of card in suspectList
 				weaponList[noCardIndex].Nm--;
+				calcProb(weaponList[noCardIndex]);
 			}
 			if(removeElement(players[noPlayer].weapons.maybeGuessed,noCard))
 			{
 				weaponList[noCardIndex].NmGuessed--;
+				calcProb(weaponList[noCardIndex]);
 			}
-			calcProb(weaponList[noCardIndex]);
 			break;
 		case "room":
 			if(removeElement(players[noPlayer].rooms.maybe,noCard))	// if card is in maybe array
@@ -552,12 +559,13 @@ function enterCardToNo(noPlayer, noCard)
 				players[noPlayer].rooms.no.push(noCard);	// add card to no array
 				noCardIndex = roomNames.indexOf(noCard);	// get index of card in suspectList
 				roomList[noCardIndex].Nm--;
+				calcProb(roomList[noCardIndex]);
 			}
 			if(removeElement(players[noPlayer].rooms.maybeGuessed,noCard))
 			{		
 				roomList[noCardIndex].NmGuessed--;
+				calcProb(roomList[noCardIndex]);
 			}
-			calcProb(roomList[noCardIndex]);
 			break;
 		default:
 			break;
@@ -649,29 +657,32 @@ function enterGuessToNo(guessingPlayer,sus,wep,rom)
 {
 	var guessedCardIndex;
 	// suspect
-	removeElement(players[guessingPlayer].suspects.maybeGuessed,sus);	// remove sus from suspect maybeGuessed array
-	guessedCardIndex = suspectNames.indexOf(sus);	// get index of card in suspectName array, same index as in suspectList array
-	suspectList[guessedCardIndex].NmGuessed--;	// decrement counter
-	if(suspectList[guessedCardIndex].NmGuessed <= 0)
-		suspectList[guessedCardIndex].NmGuessed = 0;
-	calcProb(suspectList[guessedCardIndex]);	// recalculate probability for card
-
+	if(removeElement(players[guessingPlayer].suspects.maybeGuessed,sus))	// remove sus from suspect maybeGuessed array
+	{
+		guessedCardIndex = suspectNames.indexOf(sus);	// get index of card in suspectName array, same index as in suspectList array
+		suspectList[guessedCardIndex].NmGuessed--;	// decrement counter
+		if(suspectList[guessedCardIndex].NmGuessed <= 0)
+			suspectList[guessedCardIndex].NmGuessed = 0;
+		calcProb(suspectList[guessedCardIndex]);	// recalculate probability for card
+	}
 	// weapon
-	removeElement(players[guessingPlayer].weapons.maybeGuessed,wep);
-	guessedCardIndex = weaponNames.indexOf(wep);
-	weaponList[guessedCardIndex].NmGuessed--;
-	if(weaponList[guessedCardIndex].NmGuessed <= 0)
-		weaponList[guessedCardIndex].NmGuessed = 0;
-	calcProb(weaponList[guessedCardIndex]);
-
+	if(removeElement(players[guessingPlayer].weapons.maybeGuessed,wep))
+	{
+		guessedCardIndex = weaponNames.indexOf(wep);
+		weaponList[guessedCardIndex].NmGuessed--;
+		if(weaponList[guessedCardIndex].NmGuessed <= 0)
+			weaponList[guessedCardIndex].NmGuessed = 0;
+		calcProb(weaponList[guessedCardIndex]);
+	}
 	// room
-	removeElement(players[guessingPlayer].rooms.maybeGuessed,rom);
-	guessedCardIndex = roomNames.indexOf(rom);
-	roomList[guessedCardIndex].NmGuessed--;
-	if(roomList[guessedCardIndex].NmGuessed <= 0)
-		roomList[guessedCardIndex].NmGuessed = 0;
-	calcProb(roomList[guessedCardIndex]);
-
+	if(removeElement(players[guessingPlayer].rooms.maybeGuessed,rom))
+	{
+		guessedCardIndex = roomNames.indexOf(rom);
+		roomList[guessedCardIndex].NmGuessed--;
+		if(roomList[guessedCardIndex].NmGuessed <= 0)
+			roomList[guessedCardIndex].NmGuessed = 0;
+		calcProb(roomList[guessedCardIndex]);
+	}
 	updateProbGuessedTable();
 }
 
