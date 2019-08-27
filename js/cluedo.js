@@ -301,6 +301,10 @@ function playerNumberUpdate()
 		console.log(Np + " players");
 		initCardArray();	// initiate card array with new number of players
 	}
+	var content = document.getElementById("numberOfPlayers");	// get div
+	
+	setTimeout(function(){ content.style.display = "none"; }, 250);	// hide div after player number has been entered
+	// timer used to make it nicer to look at, there was something about it instantly disappearing that made it look weird
 }
 
 // remove element e from array a
