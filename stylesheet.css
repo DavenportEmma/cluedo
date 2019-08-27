@@ -55,5 +55,5 @@ td, th
 div.content 
 {
   	display: none;
-  	overflow: hidden;
+	overflow-x: auto; 
 }
