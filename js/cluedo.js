@@ -536,13 +536,11 @@ function enterCardToNo(noPlayer, noCard)
 				calcProb(suspectList[noCardIndex]);	// recalculate card probability
 			}
 			// remove card from maybeGuessed array
-			if(removeElement(players[noPlayer].suspects.maybeGuessed,noCard))	// if card is in maybeGuessed array
-			{
-				suspectList[noCardIndex].NmGuessed--;
-				calcProb(suspectList[noCardIndex]);
-			}
-			
+			removeElement(players[noPlayer].suspects.maybeGuessed,noCard);
+			suspectList[noCardIndex].NmGuessed--;
+			calcProb(suspectList[noCardIndex]);
 			break;
+
 		case "weapon":
 			if(removeElement(players[noPlayer].weapons.maybe,noCard))	// if card is in maybe array
 			{
@@ -551,12 +549,11 @@ function enterCardToNo(noPlayer, noCard)
 				weaponList[noCardIndex].Nm--;
 				calcProb(weaponList[noCardIndex]);
 			}
-			if(removeElement(players[noPlayer].weapons.maybeGuessed,noCard))
-			{
-				weaponList[noCardIndex].NmGuessed--;
-				calcProb(weaponList[noCardIndex]);
-			}
+			removeElement(players[noPlayer].weapons.maybeGuessed,noCard);
+			weaponList[noCardIndex].NmGuessed--;
+			calcProb(weaponList[noCardIndex]);
 			break;
+
 		case "room":
 			if(removeElement(players[noPlayer].rooms.maybe,noCard))	// if card is in maybe array
 			{
@@ -565,12 +562,11 @@ function enterCardToNo(noPlayer, noCard)
 				roomList[noCardIndex].Nm--;
 				calcProb(roomList[noCardIndex]);
 			}
-			if(removeElement(players[noPlayer].rooms.maybeGuessed,noCard))
-			{		
-				roomList[noCardIndex].NmGuessed--;
-				calcProb(roomList[noCardIndex]);
-			}
+			removeElement(players[noPlayer].rooms.maybeGuessed,noCard);	
+			roomList[noCardIndex].NmGuessed--;
+			calcProb(roomList[noCardIndex]);
 			break;
+			
 		default:
 			break;
 	}
