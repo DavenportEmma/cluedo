@@ -299,12 +299,11 @@ function playerNumberUpdate()
 	{
 		Np = parseInt(num,10);	// convert base 10 string representation of number to int
 		console.log(Np + " players");
+		var content = document.getElementById("numberOfPlayers");	// get div
+		setTimeout(function(){ content.style.display = "none"; }, 250);	// hide div after player number has been entered
+		// timer used to make it nicer to look at, there was something about it instantly disappearing that made it look weird
 		initCardArray();	// initiate card array with new number of players
 	}
-	var content = document.getElementById("numberOfPlayers");	// get div
-	
-	setTimeout(function(){ content.style.display = "none"; }, 250);	// hide div after player number has been entered
-	// timer used to make it nicer to look at, there was something about it instantly disappearing that made it look weird
 }
 
 // remove element e from array a
@@ -446,7 +445,7 @@ function enterCardToYes(yesPlayer, yesCard)
 	console.log("enter " + yesCard + " to player " + yesPlayer);
 	if(yesPlayer > (Np-1))	// if the input player is greater than the total number of players	
 	{
-		alert("invalid player");
+		alert("Invalid player");
 		return;
 	}
 	var type = cardType(yesCard);	// get card type
@@ -520,7 +519,7 @@ function enterCardToNo(noPlayer, noCard)
 	console.log("enter card " + noCard + " to player " + noPlayer + " no array");
 	if(noPlayer > (Np-1))	// if the input player is greater than the total number of players	
 	{
-		alert("invalid player");
+		alert("Invalid player");
 		return;
 	}
 	var type = cardType(noCard);	// get type of card, suspect, weapon, or room
@@ -528,10 +527,10 @@ function enterCardToNo(noPlayer, noCard)
 	switch(type)
 	{
 		case "suspect":
+			noCardIndex = suspectNames.indexOf(noCard);	// get index of card in suspectList
 			if(removeElement(players[noPlayer].suspects.maybe,noCard))	// if card is in maybe array
 			{
 				players[noPlayer].suspects.no.push(noCard);	// add card to no array
-				noCardIndex = suspectNames.indexOf(noCard);	// get index of card in suspectList
 				suspectList[noCardIndex].Nm--;
 				calcProb(suspectList[noCardIndex]);	// recalculate card probability
 			}
@@ -542,10 +541,10 @@ function enterCardToNo(noPlayer, noCard)
 			break;
 
 		case "weapon":
+			noCardIndex = weaponNames.indexOf(noCard);	// get index of card in suspectList
 			if(removeElement(players[noPlayer].weapons.maybe,noCard))	// if card is in maybe array
 			{
 				players[noPlayer].weapons.no.push(noCard);	// add card to no array
-				noCardIndex = weaponNames.indexOf(noCard);	// get index of card in suspectList
 				weaponList[noCardIndex].Nm--;
 				calcProb(weaponList[noCardIndex]);
 			}
@@ -555,10 +554,10 @@ function enterCardToNo(noPlayer, noCard)
 			break;
 
 		case "room":
+			noCardIndex = roomNames.indexOf(noCard);	// get index of card in suspectList
 			if(removeElement(players[noPlayer].rooms.maybe,noCard))	// if card is in maybe array
 			{
 				players[noPlayer].rooms.no.push(noCard);	// add card to no array
-				noCardIndex = roomNames.indexOf(noCard);	// get index of card in suspectList
 				roomList[noCardIndex].Nm--;
 				calcProb(roomList[noCardIndex]);
 			}
@@ -566,7 +565,7 @@ function enterCardToNo(noPlayer, noCard)
 			roomList[noCardIndex].NmGuessed--;
 			calcProb(roomList[noCardIndex]);
 			break;
-			
+
 		default:
 			break;
 	}
@@ -699,12 +698,12 @@ function enterGuess(sus, wep, rom, gp, rp, res)
 	console.log(sus + " " + wep + " " + rom + " " + " response: " + res);
 	if(gp > (Np-1))	// if the input player is greater than the total number of players	
 	{
-		alert("invalid player");
+		alert("Invalid guessing player");
 		return;
 	}
 	if(rp > (Np-1))	// if the input player is greater than the total number of players	
 	{
-		alert("invalid player");
+		alert("Invalid responding player");
 		return;
 	}
 	if(res == 0)	// if responding player doesn't have the suspect, weapon, or room
